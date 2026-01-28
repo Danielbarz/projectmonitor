@@ -1,10 +1,12 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import logoDark from '../assets/images/Logo/logo_dark.png';
+import { useRole } from '../context/RoleContext';
 
 const Sidebar = () => {
   const location = useLocation();
   const activePage = location.pathname;
+  const { role } = useRole();
 
   const menuItems = [
     { 
@@ -26,6 +28,29 @@ const Sidebar = () => {
       )
     },
   ];
+
+  if (role === 'admin') {
+    menuItems.push(
+      {
+        path: '/master-data',
+        label: 'Master Data',
+        icon: (
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path>
+          </svg>
+        )
+      },
+      {
+        path: '/manage-roles',
+        label: 'Manage Roles',
+        icon: (
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+          </svg>
+        )
+      }
+    );
+  }
 
   return (
     <div className="w-64 h-screen bg-slate-800 flex flex-col fixed left-0 top-0 shadow-lg z-50">

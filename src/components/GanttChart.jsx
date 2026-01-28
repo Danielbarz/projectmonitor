@@ -3,6 +3,7 @@ import React, { useState, useMemo } from 'react';
 const GanttChart = () => {
   const [viewMode, setViewMode] = useState('month'); // 'month' | 'week' | 'day'
   const [searchQuery, setSearchQuery] = useState('');
+  const [currentDate, setCurrentDate] = useState(new Date('2026-01-01'));
 
   // Mock Data with specific start/end dates
   const rawProjects = [
@@ -13,17 +14,36 @@ const GanttChart = () => {
     { name: 'PRJ-2026-005', startDate: '2026-09-01', endDate: '2026-11-30', color: 'bg-teal-500' },
   ];
 
+  const handlePrev = () => {
+    const newDate = new Date(currentDate);
+    if (viewMode === 'month') newDate.setFullYear(newDate.getFullYear() - 1);
+    else if (viewMode === 'week') newDate.setMonth(newDate.getMonth() - 3); // Shift by quarter
+    else if (viewMode === 'day') newDate.setMonth(newDate.getMonth() - 1);
+    setCurrentDate(newDate);
+  };
+
+  const handleNext = () => {
+    const newDate = new Date(currentDate);
+    if (viewMode === 'month') newDate.setFullYear(newDate.getFullYear() + 1);
+    else if (viewMode === 'week') newDate.setMonth(newDate.getMonth() + 3);
+    else if (viewMode === 'day') newDate.setMonth(newDate.getMonth() + 1);
+    setCurrentDate(newDate);
+  };
+
   // Helper to get day of year (1-366)
   const getDayOfYear = (dateStr) => {
     const date = new Date(dateStr);
-    const start = new Date(date.getFullYear(), 0, 0);
+    const start = new Date(currentDate.getFullYear(), 0, 0);
     const diff = date - start;
     const oneDay = 1000 * 60 * 60 * 24;
     return Math.floor(diff / oneDay);
   };
 
-  // Helper to get month index (0-11)
-  const getMonthIndex = (dateStr) => new Date(dateStr).getMonth();
+  // Helper to get month index (0-11) relative to current year
+  const getMonthIndex = (dateStr) => {
+    const date = new Date(dateStr);
+    return (date.getFullYear() - currentDate.getFullYear()) * 12 + date.getMonth();
+  };
 
   // Helper to get week number (1-52)
   const getWeekNumber = (dateStr) => {
@@ -33,9 +53,16 @@ const GanttChart = () => {
     return Math.ceil((days + start.getDay() + 1) / 7);
   };
 
-  // Helper to generate days for the header
-  const getDaysInYear = (year) => {
+  // Helper to generate days for the header based on currentDate
+  const getDaysInView = () => {
+    if (viewMode === 'month') {
+        // Return 12 months for the current year
+        return Array(12).fill(0).map((_, i) => new Date(currentDate.getFullYear(), i, 1));
+    }
+    // For simplicity in this demo, week/day modes will just use standard ranges relative to currentDate
+    // Real implementation would need dynamic range calculations
     const days = [];
+    const year = currentDate.getFullYear();
     const date = new Date(year, 0, 1);
     while (date.getFullYear() === year) {
       days.push(new Date(date));
@@ -44,8 +71,8 @@ const GanttChart = () => {
     return days;
   };
 
-  const daysIn2026 = useMemo(() => getDaysInYear(2026), []);
-  const weeksInYear = 53; // Approximate max weeks
+  const daysInView = useMemo(() => getDaysInView(), [currentDate, viewMode]);
+  const weeksInYear = 53;
 
   const filteredProjects = rawProjects.filter(p => 
     p.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -70,26 +97,45 @@ const GanttChart = () => {
            </svg>
         </div>
 
-        {/* View Toggle */}
-        <div className="flex bg-slate-200 rounded-lg p-1">
-           <button 
-             onClick={() => setViewMode('month')}
-             className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all ${viewMode === 'month' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-           >
-             Months
-           </button>
-           <button 
-             onClick={() => setViewMode('week')}
-             className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all ${viewMode === 'week' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-           >
-             Weeks
-           </button>
-           <button 
-             onClick={() => setViewMode('day')}
-             className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all ${viewMode === 'day' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-           >
-             Days
-           </button>
+        <div className="flex items-center gap-4">
+            {/* Pagination Controls */}
+            <div className="flex items-center gap-2 bg-white rounded-lg border border-slate-200 p-1 shadow-sm">
+                <button onClick={handlePrev} className="p-1 hover:bg-slate-100 rounded text-slate-500 transition-colors">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                </button>
+                <span className="text-xs font-bold text-slate-700 min-w-[60px] text-center">
+                    {currentDate.getFullYear()}
+                </span>
+                <button onClick={handleNext} className="p-1 hover:bg-slate-100 rounded text-slate-500 transition-colors">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+            </div>
+
+            {/* View Toggle */}
+            <div className="flex bg-slate-200 rounded-lg p-1">
+            <button 
+                onClick={() => setViewMode('month')}
+                className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all ${viewMode === 'month' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+            >
+                Months
+            </button>
+            <button 
+                onClick={() => setViewMode('week')}
+                className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all ${viewMode === 'week' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+            >
+                Weeks
+            </button>
+            <button 
+                onClick={() => setViewMode('day')}
+                className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all ${viewMode === 'day' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+            >
+                Days
+            </button>
+            </div>
         </div>
       </div>
 
@@ -121,9 +167,9 @@ const GanttChart = () => {
               {/* Timeline Header */}
               <div className="h-10 border-b border-slate-200 bg-slate-50 flex sticky top-0 z-10">
                  {viewMode === 'month' && (
-                    Array(12).fill(0).map((_, i) => (
+                    daysInView.map((date, i) => (
                        <div key={i} className="flex-1 border-r border-slate-200 flex items-center justify-center text-xs font-bold text-slate-400">
-                          {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i]}
+                          {date.toLocaleString('default', { month: 'short' })}
                        </div>
                     ))
                  )}
@@ -137,7 +183,7 @@ const GanttChart = () => {
                  )}
 
                  {viewMode === 'day' && (
-                    daysIn2026.map((date, i) => {
+                    daysInView.map((date, i) => {
                        const isStartOfMonth = date.getDate() === 1;
                        return (
                          <div key={i} className={`flex-1 min-w-[30px] border-r border-slate-100 flex flex-col items-center justify-center ${isStartOfMonth ? 'border-l-2 border-l-slate-300' : ''}`}>
@@ -153,13 +199,13 @@ const GanttChart = () => {
               <div className="relative">
                  {/* Grid Background */}
                  <div className="absolute inset-0 flex pointer-events-none h-full">
-                    {viewMode === 'month' && Array(12).fill(0).map((_, i) => (
+                    {viewMode === 'month' && daysInView.map((_, i) => (
                         <div key={i} className="flex-1 border-r border-slate-50 h-full"></div>
                     ))}
                     {viewMode === 'week' && Array(weeksInYear).fill(0).map((_, i) => (
                         <div key={i} className="flex-1 border-r border-slate-50 h-full"></div>
                     ))}
-                    {viewMode === 'day' && daysIn2026.map((_, i) => (
+                    {viewMode === 'day' && daysInView.map((_, i) => (
                         <div key={i} className="flex-1 min-w-[30px] border-r border-slate-50 h-full"></div>
                     ))}
                  </div>
@@ -173,8 +219,9 @@ const GanttChart = () => {
                     if (viewMode === 'month') {
                        const startMonth = getMonthIndex(proj.startDate);
                        const endMonth = getMonthIndex(proj.endDate);
+                       // 12 months in view
                        left = (startMonth / 12) * 100;
-                       const durationMonths = (endMonth - startMonth) + 1;
+                       const durationMonths = (endMonth - startMonth) + 1; // inclusive
                        width = (durationMonths / 12) * 100;
                     } else if (viewMode === 'week') {
                        const startWeek = getWeekNumber(proj.startDate);
@@ -184,6 +231,7 @@ const GanttChart = () => {
                     } else {
                        const startDay = getDayOfYear(proj.startDate);
                        const endDay = getDayOfYear(proj.endDate);
+                       // For day view, we are showing ~365 days in this simplified demo
                        const totalDays = 365;
                        left = ((startDay - 1) / totalDays) * 100;
                        width = ((endDay - startDay + 1) / totalDays) * 100;
