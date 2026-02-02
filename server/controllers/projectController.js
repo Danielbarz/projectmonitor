@@ -237,7 +237,7 @@ exports.resetProjects = async (req, res) => {
 };
 
 // Import Projects from Excel/CSV
-const xlsx = require('xlsx');
+const ExcelJS = require('exceljs');
 
 exports.importProjects = async (req, res) => {
   try {
@@ -245,10 +245,24 @@ exports.importProjects = async (req, res) => {
       return res.status(400).json({ message: 'Please upload an excel or csv file' });
     }
 
-    const workbook = xlsx.read(req.file.buffer, { type: 'buffer', cellDates: true });
-    const sheetName = workbook.SheetNames[0];
-    const sheet = workbook.Sheets[sheetName];
-    const rawData = xlsx.utils.sheet_to_json(sheet);
+    const workbook = new ExcelJS.Workbook();
+    await workbook.xlsx.load(req.file.buffer);
+    const worksheet = workbook.getWorksheet(1);
+
+    const rawData = [];
+    const headers = [];
+    worksheet.getRow(1).eachCell((cell, colNumber) => {
+      headers[colNumber - 1] = cell.value;
+    });
+    worksheet.eachRow((row, rowNumber) => {
+      if (rowNumber > 1) {
+        const rowData = {};
+        row.eachCell((cell, colNumber) => {
+          rowData[headers[colNumber - 1]] = cell.value;
+        });
+        rawData.push(rowData);
+      }
+    });
 
     if (rawData.length === 0) {
       return res.status(400).json({ message: 'File is empty' });

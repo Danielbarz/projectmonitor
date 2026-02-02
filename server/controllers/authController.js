@@ -73,6 +73,8 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
+    
+    console.log('Login attempt:', { email, password: password ? '***' : 'MISSING' });
 
     // 1. Cek apakah user ada
     // Kita join dengan table roles supaya bisa dapat nama rolenya (misal: "ADMIN")
@@ -84,18 +86,26 @@ exports.login = async (req, res) => {
     `, [email]);
     
     if (user.rows.length === 0) {
+      console.log('❌ User not found');
       return res.status(401).json({ message: 'Email atau password salah' });
     }
+    
+    console.log('✅ User found:', user.rows[0].email);
 
     // 2. Cek Password (Compare Hash)
     const validPassword = await bcrypt.compare(password, user.rows[0].password);
     
+    console.log('Password valid?', validPassword);
+    
     if (!validPassword) {
+      console.log('❌ Invalid password');
       return res.status(401).json({ message: 'Email atau password salah' });
     }
 
     // 3. Generate Token
     const token = generateToken(user.rows[0].id, user.rows[0].role_name);
+
+    console.log('✅ Login successful');
 
     // 4. Kirim Respon
     res.json({ 
@@ -110,7 +120,7 @@ exports.login = async (req, res) => {
     });
 
   } catch (err) {
-    console.error(err.message);
+    console.error('Login error:', err.message);
     res.status(500).send('Server Error saat Login');
   }
 };

@@ -18,6 +18,8 @@ const Login = () => {
     setLoading(true);
 
     try {
+      console.log('Attempting login with:', { email, password: '***' });
+      
       const response = await fetch('http://localhost:5000/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -25,6 +27,7 @@ const Login = () => {
       });
 
       const data = await response.json();
+      console.log('Response:', { status: response.status, data });
 
       if (!response.ok) {
         throw new Error(data.message || 'Login failed');
@@ -33,6 +36,7 @@ const Login = () => {
       login(data.user, data.token);
       navigate('/dashboard');
     } catch (err) {
+      console.error('Login error:', err);
       setError(err.message);
     } finally {
       setLoading(false);
@@ -45,7 +49,7 @@ const Login = () => {
       <div className="hidden lg:block lg:w-[65%] h-full relative">
         <img 
           className="w-full h-full object-cover" 
-          src="https://placehold.co/932x1024" 
+          src="/images/big.png" 
           alt="Background" 
         />
         <div className="absolute inset-0 bg-slate-800 opacity-60"></div>

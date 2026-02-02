@@ -8,9 +8,9 @@ const seedDatabase = async () => {
     // 1. Seed Roles
     console.log('... Seeding Roles');
     await pool.query(`
-      INSERT INTO roles (id, role_name) VALUES 
-      (1, 'SUPERADMIN'), 
-      (2, 'ADMIN'), 
+      INSERT INTO roles (id, role_name) VALUES
+      (1, 'SUPERADMIN'),
+      (2, 'ADMIN'),
       (3, 'USER')
       ON CONFLICT (role_name) DO NOTHING;
     `);
@@ -45,16 +45,16 @@ const seedDatabase = async () => {
     const hashedPassword = await bcrypt.hash(plainPassword, salt);
 
     const users = [
-      { name: 'Superadmin', email: 'superadmin@telkom.ac.id', role_id: 1 },
-      { name: 'Admin', email: 'admin@telkom.ac.id', role_id: 2 },
-      { name: 'User', email: 'user@telkom.ac.id', role_id: 3 }
+      { name: 'Superadmin', email: 'superadmin@telkom.co.id', role_id: 1 },
+      { name: 'Admin', email: 'admin@telkom.co.id', role_id: 2 },
+      { name: 'User', email: 'user@telkom.co.id', role_id: 3 }
     ];
 
     for (const user of users) {
       const check = await pool.query('SELECT * FROM users WHERE email = $1', [user.email]);
       if (check.rows.length === 0) {
         await pool.query(`
-          INSERT INTO users (name, email, password, role_id) 
+          INSERT INTO users (name, email, password, role_id)
           VALUES ($1, $2, $3, $4)
         `, [user.name, user.email, hashedPassword, user.role_id]);
       } else {
