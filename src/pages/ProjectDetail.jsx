@@ -235,6 +235,7 @@ const ProjectDetail = () => {
                       statusName={project.status_name}
                       statusSequence={project.status_sequence}
                       lastStatusSequence={project.last_status_sequence}
+                      hasJT={project.has_jt_history}
                    />
                 </div>
 

@@ -137,26 +137,28 @@ const NewProject = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                  </svg>
               </button>
-              <h1 className="text-3xl font-bold text-slate-800">Add New Project</h1>
+              <h1 className="text-3xl font-bold text-slate-800">
+                Add <span className="text-red-600">New Project</span>
+              </h1>
             </div>
 
             {/* Tabs */}
             <div className="relative mb-8">
               {/* Red Blur Background Effect */}
-              <div className={`absolute top-0 w-48 h-16 bg-red-600/5 blur-[20px] transition-all duration-500 rounded-b-full pointer-events-none ${
-                activeTab === 'csv' ? 'left-0' : 'left-40'
+              <div className={`absolute top-0 w-32 h-12 bg-red-600/5 blur-[15px] transition-all duration-500 rounded-b-full pointer-events-none ${
+                activeTab === 'csv' ? 'left-0' : 'left-32'
               }`}></div>
 
-              <div className="border-b-4 border-slate-200/50 flex gap-8 relative z-10">
+              <div className="border-b-2 border-slate-200/50 flex gap-6 relative z-10">
                 <button 
                   onClick={() => setActiveTab('csv')}
-                  className={`pb-3 text-2xl font-bold transition-colors relative ${activeTab === 'csv' ? 'text-red-600 border-b-4 border-red-600 -mb-1' : 'text-slate-500 hover:text-slate-700'}`}
+                  className={`pb-2 text-base font-bold transition-colors relative ${activeTab === 'csv' ? 'text-red-600 border-b-2 border-red-600 -mb-[2px]' : 'text-slate-500 hover:text-slate-700'}`}
                 >
                   Upload CSV
                 </button>
                 <button 
                   onClick={() => setActiveTab('manual')}
-                  className={`pb-3 text-2xl font-bold transition-colors relative ${activeTab === 'manual' ? 'text-red-600 border-b-4 border-red-600 -mb-1' : 'text-slate-500 hover:text-slate-700'}`}
+                  className={`pb-2 text-base font-bold transition-colors relative ${activeTab === 'manual' ? 'text-red-600 border-b-2 border-red-600 -mb-[2px]' : 'text-slate-500 hover:text-slate-700'}`}
                 >
                   Add New Line
                 </button>

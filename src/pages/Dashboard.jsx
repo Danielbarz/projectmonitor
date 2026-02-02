@@ -112,18 +112,65 @@ const Dashboard = () => {
                 <div className="py-20 text-center text-slate-400 font-bold animate-pulse">Loading dashboard data...</div>
             ) : (
                 <>
-                {/* KPI Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                    {[
-                     { label: 'Total Project', value: stats.total_projects, color: 'text-amber-500', border: 'border-amber-500' },
-                     { label: 'OGP', value: stats.ogp, color: 'text-teal-500', border: 'border-teal-500' },
-                     { label: 'JT', value: stats.jt, color: 'text-red-600', border: 'border-red-600' },
-                     { label: 'Completed', value: stats.completed, color: 'text-cyan-500', border: 'border-cyan-500' }
+                     { 
+                       label: 'Total Project', 
+                       value: stats.total_projects, 
+                       color: 'text-amber-700', 
+                       border: 'border-amber-500', 
+                       grad: 'from-white to-amber-100',
+                       icon: (
+                         <svg className="w-12 h-12 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                         </svg>
+                       )
+                     },
+                     { 
+                       label: 'OGP', 
+                       value: stats.ogp, 
+                       color: 'text-teal-700', 
+                       border: 'border-teal-500', 
+                       grad: 'from-white to-teal-100',
+                       icon: (
+                         <svg className="w-12 h-12 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" strokeDasharray="4 4"></path>
+                         </svg>
+                       )
+                     },
+                     { 
+                       label: 'JT', 
+                       value: stats.jt, 
+                       color: 'text-red-700', 
+                       border: 'border-red-600', 
+                       grad: 'from-white to-red-100',
+                       icon: (
+                         <svg className="w-12 h-12 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M5 2h14v5c0 3-3 3-3 5s3 2 3 5v5H5v-5c0-3 3-3 3-5s-3-2-3-5V2z"></path>
+                         </svg>
+                       )
+                     },
+                     { 
+                       label: 'Completed', 
+                       value: stats.completed, 
+                       color: 'text-cyan-700', 
+                       border: 'border-cyan-500', 
+                       grad: 'from-white to-cyan-100',
+                       icon: (
+                         <svg className="w-12 h-12 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                         </svg>
+                       )
+                     }
                    ].map((stat, idx) => (
-                     <div key={idx} className={`bg-white rounded-xl p-6 shadow-sm border-l-4 ${stat.border} flex items-center justify-between hover:shadow-md transition-shadow`}>
+                     <div key={idx} className={`bg-gradient-to-r ${stat.grad} rounded-xl p-6 shadow-sm border-l-4 ${stat.border} flex items-center justify-between hover:shadow-md transition-all group`}>
                        <div>
                          <p className="text-slate-600 text-xs font-bold uppercase mb-1 opacity-60">{stat.label}</p>
                          <p className={`text-4xl font-bold ${stat.color}`}>{stat.value}</p>
+                       </div>
+                       <div className="transition-transform group-hover:scale-110 duration-300">
+                          {stat.icon}
                        </div>
                      </div>
                    ))}
@@ -140,7 +187,7 @@ const Dashboard = () => {
                             <div className="w-full h-full rounded-full shadow-inner"
                                 style={{
                                     background: stats.total_projects > 0 
-                                        ? `conic-gradient(#22c55e 0% ${(stats.completed/stats.total_projects)*100}%, #3b82f6 ${(stats.completed/stats.total_projects)*100}% ${((stats.completed+stats.ogp)/stats.total_projects)*100}%, #f59e0b ${((stats.completed+stats.ogp)/stats.total_projects)*100}% 100%)` 
+                                        ? `conic-gradient(#14B8A6 0% ${(stats.completed/stats.total_projects)*100}%, #1F2A44 ${(stats.completed/stats.total_projects)*100}% ${((stats.completed+stats.ogp)/stats.total_projects)*100}%, #f59e0b ${((stats.completed+stats.ogp)/stats.total_projects)*100}% 100%)` 
                                         : '#f1f5f9'
                                 }}
                             />
@@ -150,7 +197,7 @@ const Dashboard = () => {
                             </div>
                         </div>
                         <div className="mt-8 flex justify-center gap-4 w-full">
-                            {[{ label: 'Done', c: 'bg-green-500', v: stats.completed }, { label: 'OGP', c: 'bg-blue-500', v: stats.ogp }, { label: 'JT', c: 'bg-amber-500', v: stats.jt }].map((item, i) => (
+                            {[{ label: 'Done', c: 'bg-[#14B8A6]', v: stats.completed }, { label: 'OGP', c: 'bg-[#1F2A44]', v: stats.ogp }, { label: 'JT', c: 'bg-[#f59e0b]', v: stats.jt }].map((item, i) => (
                                 <div key={i} className="flex flex-col items-center">
                                     <div className="flex items-center gap-1.5 mb-1">
                                         <span className={`w-2 h-2 rounded-full ${item.c}`}></span>
@@ -169,7 +216,7 @@ const Dashboard = () => {
                     <div className="flex flex-col items-center w-full">
                         <div className="relative w-48 h-48">
                             <div className="w-full h-full rounded-full shadow-inner"
-                                style={{ background: `conic-gradient(#10b981 0% ${onTimePercentage}%, #f1f5f9 ${onTimePercentage}% 100%)` }}
+                                style={{ background: `conic-gradient(#14B8A6 0% ${onTimePercentage}%, #f1f5f9 ${onTimePercentage}% 100%)` }}
                             />
                             <div className="absolute inset-6 bg-white rounded-full flex flex-col items-center justify-center shadow-sm">
                                 <span className="text-4xl font-bold text-slate-800">{onTimePercentage}%</span>
@@ -196,7 +243,7 @@ const Dashboard = () => {
                     <div className="flex flex-col items-center w-full">
                         <div className="relative w-48 h-48">
                             <div className="w-full h-full rounded-full shadow-inner"
-                                style={{ background: `conic-gradient(#3b82f6 0% ${achievedPercentage}%, #f1f5f9 ${achievedPercentage}% 100%)` }}
+                                style={{ background: `conic-gradient(#06B6D4 0% ${achievedPercentage}%, #f1f5f9 ${achievedPercentage}% 100%)` }}
                             />
                             <div className="absolute inset-6 bg-white rounded-full flex flex-col items-center justify-center shadow-sm">
                                 <span className="text-4xl font-bold text-slate-800">{achievedPercentage}%</span>

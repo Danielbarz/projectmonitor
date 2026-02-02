@@ -17,7 +17,8 @@ const UpdateProject = () => {
   const [notesHistory, setNotesHistory] = useState([]);
   const [oldDescription, setOldDescription] = useState('');
   const [newNote, setNewNote] = useState('');
-  const [lastStatusSequence, setLastStatusSequence] = useState(null); // Store current DB status sequence for preview
+  const [lastStatusSequence, setLastStatusSequence] = useState(null);
+  const [hasJTHistory, setHasJTHistory] = useState(false); // New state for JT History
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
   const [isMilestoneModalOpen, setIsMilestoneModalOpen] = useState(false);
   const [tempNote, setTempNote] = useState('');
@@ -63,10 +64,10 @@ const UpdateProject = () => {
             }];
         }
         setNotesHistory(initialNotes);
-        setOldDescription(projectData.description || ''); 
-        
-        // Correctly initialize lastStatusSequence
-        setLastStatusSequence(projectData.last_status_sequence || projectData.status_sequence || 1);
+        // Save current DB status sequence
+        setLastStatusSequence(projectData.last_status_sequence || projectData.status_sequence || 1); 
+        setHasJTHistory(projectData.has_jt_history || false); // Set from API
+        setOldDescription(projectData.description || '');
 
         const formatDate = (isoString) => {
             if (!isoString) return '';
@@ -345,6 +346,7 @@ const UpdateProject = () => {
                               statusName={currentStatusObj?.status_name}
                               statusSequence={currentStatusObj?.sequence_order}
                               lastStatusSequence={lastStatusSequence}
+                              hasJT={hasJTHistory}
                            />
                        );
                                                          })()}
