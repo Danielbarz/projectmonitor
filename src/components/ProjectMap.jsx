@@ -18,9 +18,13 @@ let DefaultIcon = L.icon({
 
 L.Marker.prototype.options.icon = DefaultIcon;
 
-const ProjectMap = () => {
-  // Dummy data for project locations (centered around Surabaya/East Java based on context)
-  const projects = [
+const ProjectMap = ({ data, center, zoom = 9, height = '400px' }) => {
+  // Use passed data or fallback to dummy
+  const mapCenter = center 
+    ? [parseFloat(center[0]), parseFloat(center[1])]
+    : [-7.250445, 112.768845];
+  
+  const markers = data || [
     { id: 1, name: "Project A", lat: -7.250445, lng: 112.768845, status: "On Progress" },
     { id: 2, name: "Project B", lat: -7.285078, lng: 112.781099, status: "Completed" },
     { id: 3, name: "Project C", lat: -7.311456, lng: 112.723412, status: "Pending" },
@@ -29,10 +33,10 @@ const ProjectMap = () => {
   ];
 
   return (
-    <div className="h-[400px] w-full rounded-xl overflow-hidden shadow-sm border border-slate-200 z-0 relative">
+    <div style={{ height }} className="w-full rounded-xl overflow-hidden shadow-sm border border-slate-200 z-0 relative">
       <MapContainer 
-        center={[-7.250445, 112.768845]} 
-        zoom={9} 
+        center={mapCenter} 
+        zoom={zoom} 
         scrollWheelZoom={false} 
         style={{ height: '100%', width: '100%' }}
       >
@@ -40,12 +44,16 @@ const ProjectMap = () => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {projects.map((project) => (
-          <Marker key={project.id} position={[project.lat, project.lng]}>
+        {markers.map((marker, idx) => (
+          // Handle various naming conventions (id/order_id, name/project_name/lokasi)
+          <Marker 
+            key={marker.id || idx} 
+            position={[parseFloat(marker.lat || marker.latitude), parseFloat(marker.lng || marker.longitude)]}
+          >
             <Popup>
               <div className="font-['Carlito']">
-                <h3 className="font-bold text-slate-800">{project.name}</h3>
-                <p className="text-slate-600 text-xs">{project.status}</p>
+                <h3 className="font-bold text-slate-800">{marker.name || marker.lokasi || 'Project'}</h3>
+                <p className="text-slate-600 text-xs">{marker.status || marker.status_name || ''}</p>
               </div>
             </Popup>
           </Marker>

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Input = ({ label, type = 'text', placeholder, value, onChange, className = '' }) => {
+const Input = ({ label, type = 'text', placeholder, value, onChange, name, autoComplete, className = '' }) => {
   return (
     <div className={`flex flex-col gap-2 ${className}`}>
       <label className="text-slate-800 text-lg font-bold font-['Carlito']">
@@ -9,6 +9,8 @@ const Input = ({ label, type = 'text', placeholder, value, onChange, className =
       <div className="relative">
         <input
           type={type}
+          name={name}
+          autoComplete={autoComplete}
           placeholder={placeholder}
           value={value}
           onChange={onChange}

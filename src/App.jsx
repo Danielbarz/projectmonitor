@@ -9,32 +9,39 @@ import ProjectDetail from './pages/ProjectDetail';
 import UpdateProject from './pages/UpdateProject';
 import Notifications from './pages/Notifications';
 import EditProfile from './pages/EditProfile';
-import MasterData from './pages/MasterData';
 import ManageRoles from './pages/ManageRoles';
-import { RoleProvider } from './context/RoleContext';
-import RoleToggle from './components/RoleToggle';
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
 import './App.css';
 
 function App() {
   return (
-    <RoleProvider>
+    <AuthProvider>
       <Router>
-        <RoleToggle />
         <Routes>
+          {/* Public Routes */}
           <Route path="/" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/projects" element={<AllProjects />} />
-          <Route path="/projects/new" element={<NewProject />} />
-          <Route path="/projects/:id" element={<ProjectDetail />} />
-          <Route path="/projects/:id/edit" element={<UpdateProject />} />
-          <Route path="/notifications" element={<Notifications />} />
-          <Route path="/profile/edit" element={<EditProfile />} />
-          <Route path="/master-data" element={<MasterData />} />
-          <Route path="/manage-roles" element={<ManageRoles />} />
+
+          {/* Protected Routes (Accessible by USER, ADMIN, SUPERADMIN) */}
+          <Route element={<ProtectedRoute allowedRoles={['USER', 'ADMIN', 'SUPERADMIN']} />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/projects" element={<AllProjects />} />
+            <Route path="/projects/:id" element={<ProjectDetail />} />
+            <Route path="/notifications" element={<Notifications />} />
+            <Route path="/profile/edit" element={<EditProfile />} />
+          </Route>
+
+          {/* Admin Routes (Accessible only by ADMIN, SUPERADMIN) */}
+          <Route element={<ProtectedRoute allowedRoles={['ADMIN', 'SUPERADMIN']} />}>
+            <Route path="/projects/new" element={<NewProject />} />
+            <Route path="/projects/:id/edit" element={<UpdateProject />} />
+            <Route path="/manage-roles" element={<ManageRoles />} />
+          </Route>
+
         </Routes>
       </Router>
-    </RoleProvider>
+    </AuthProvider>
   );
 }
 

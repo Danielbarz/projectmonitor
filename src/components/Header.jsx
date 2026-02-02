@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useRole } from '../context/RoleContext';
+import { useAuth } from '../context/AuthContext';
 
 const Header = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const navigate = useNavigate();
-  const { role } = useRole();
+  const { user, logout } = useAuth();
 
   const handleLogout = () => {
-    // Perform logout logic here (e.g., clear tokens)
+    logout();
     navigate('/');
   };
 
@@ -18,7 +18,7 @@ const Header = () => {
       <div className="flex items-center">
         <h2 className="text-2xl font-['Carlito']">
           <span className="font-bold text-slate-800">Good Morning, </span>
-          <span className="font-bold text-red-600 capitalize">{role}</span>
+          <span className="font-bold text-red-600 capitalize">{user?.name || 'User'}</span>
           <span className="font-bold text-slate-800">!</span>
         </h2>
       </div>
@@ -43,8 +43,8 @@ const Header = () => {
               </svg>
             </div>
             <div className="hidden md:block text-left">
-              <p className="text-sm font-bold text-slate-800 font-['Carlito'] capitalize">{role === 'admin' ? 'Super Admin' : 'User Employee'}</p>
-              <p className="text-xs text-slate-500 font-['Carlito'] capitalize">{role}</p>
+              <p className="text-sm font-bold text-slate-800 font-['Carlito'] capitalize">{user?.name || 'User'}</p>
+              <p className="text-xs text-slate-500 font-['Carlito'] capitalize">{user?.role || 'Guest'}</p>
             </div>
             <svg className={`w-4 h-4 text-slate-400 transition-transform ${isProfileOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
