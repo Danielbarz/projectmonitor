@@ -4,6 +4,7 @@ const MilestoneTimeline = ({ statusName, statusSequence, hasJT, lastStatusSequen
   const containerRef = useRef(null);
   const [width, setWidth] = useState(0);
 
+  // Update width on resize for responsive SVG
   useEffect(() => {
     if (!containerRef.current) return;
     const updateWidth = () => {
@@ -26,27 +27,24 @@ const MilestoneTimeline = ({ statusName, statusSequence, hasJT, lastStatusSequen
   // 1. Define Base Steps
   let steps = [
     { name: 'Belum Input', label: 'Sudah Input', icon: '📝' },
-    { name: 'Survey', label: 'Survey Lokasi', icon: '📋' },
-    { name: 'Progres PT 1', label: 'Progress PT 1', icon: '⚙️' },
+    { name: 'Survey', label: 'Survey', icon: '📋' },
+    { name: 'Progres PT 1', label: 'Progress PT', icon: '⚙️' },
     { name: 'Completed', label: 'Completed', icon: '🚀' }
   ];
 
-  // Determine resolved sequence (renamed from currentSeq to avoid confusion)
   const resolvedSeq = statusSequence || seqMap[statusName] || 1;
 
-  // Add JT Logic
   if (hasJT || statusName === 'JT' || (lastStatusSequence === 3 && statusName === 'Cancelled')) {
     steps.splice(2, 0, { name: 'JT', label: 'JT', icon: '⚠️' });
   }
 
-  // Handle Cancelled Logic
   if (statusName === 'Cancelled') {
       const cutOffSeq = lastStatusSequence || 1;
       steps = steps.filter(s => (seqMap[s.name] || 0) <= cutOffSeq);
-      steps.push({ name: 'Cancelled', label: 'Project Cancelled', icon: '❌' });
+      steps.push({ name: 'Cancelled', label: 'Cancelled', icon: '❌' });
   }
 
-  // Render SVG Paths
+  // Render SVG Paths (Rounded Orthogonal / Pipe Style)
   const renderPaths = () => {
     if (width === 0) return null;
 
@@ -63,7 +61,7 @@ const MilestoneTimeline = ({ statusName, statusSequence, hasJT, lastStatusSequen
       const isFinished = resolvedSeq > stepSeq || (resolvedSeq === stepSeq && step.name === 'Completed');
       const isCancelledLine = steps[i+1].name === 'Cancelled';
       
-      let color = isFinished ? "#22c55e" : "#cbd5e1"; 
+      let color = isFinished ? "#84cc16" : "#cbd5e1"; 
       let dashArray = isFinished ? "0" : "8 6";
       
       if (isCancelledLine) {
@@ -73,14 +71,15 @@ const MilestoneTimeline = ({ statusName, statusSequence, hasJT, lastStatusSequen
 
       const startY = (i * rowHeight) + iconSize; 
       const endY = ((i + 1) * rowHeight);      
-      
       const midY = (startY + endY) / 2;
-      const radius = 30; 
+      const radius = 30; // Smooth corners
 
       let d = "";
       if (i % 2 === 0) {
+        // Left to Right (Pipe)
         d = `M ${leftX} ${startY} L ${leftX} ${midY - radius} Q ${leftX} ${midY} ${leftX + radius} ${midY} L ${rightX - radius} ${midY} Q ${rightX} ${midY} ${rightX} ${midY + radius} L ${rightX} ${endY}`;
       } else {
+        // Right to Left (Pipe)
         d = `M ${rightX} ${startY} L ${rightX} ${midY - radius} Q ${rightX} ${midY} ${rightX - radius} ${midY} L ${leftX + radius} ${midY} Q ${leftX} ${midY} ${leftX} ${midY + radius} L ${leftX} ${endY}`;
       }
 
@@ -99,22 +98,21 @@ const MilestoneTimeline = ({ statusName, statusSequence, hasJT, lastStatusSequen
       <div className="relative z-10 flex flex-col"> 
         {steps.map((step, idx) => {
             const stepSeq = seqMap[step.name];
-            // Use resolvedSeq here
             const isFinished = resolvedSeq > stepSeq || (resolvedSeq === stepSeq && step.name === 'Completed');
             const isCurrent = resolvedSeq === stepSeq && step.name !== 'Completed' && step.name !== 'Cancelled';
             const isCancelled = step.name === 'Cancelled';
             
-            let bubbleClass = "bg-white border-2 border-slate-300 text-slate-400";
-            if (isFinished) bubbleClass = "bg-green-500 border-green-500 text-white shadow-lg shadow-green-200";
-            if (isCurrent) bubbleClass = "bg-white border-2 border-dashed border-blue-500 text-blue-600 shadow-lg shadow-blue-100 ring-4 ring-blue-50";
-            if (isCancelled) bubbleClass = "bg-red-500 border-red-500 text-white shadow-lg shadow-red-200";
+            let bubbleClass = "bg-white border-2 border-slate-200 text-slate-400";
+            if (isFinished) bubbleClass = "bg-[#84cc16] border-[#84cc16] text-white shadow-lg shadow-lime-100";
+            if (isCurrent) bubbleClass = "bg-white border-2 border-dashed border-[#3b82f6] text-[#3b82f6] shadow-lg ring-4 ring-blue-50";
+            if (isCancelled) bubbleClass = "bg-[#ef4444] border-[#ef4444] text-white shadow-lg shadow-red-100";
 
             const isLeft = idx % 2 === 0;
 
             return (
                 <div key={idx} style={{ height: idx === steps.length - 1 ? 'auto' : '160px' }} className={`flex items-start w-full ${isLeft ? 'flex-row' : 'flex-row-reverse text-right'}`}>
                     
-                    <div className={`w-14 h-14 rounded-full flex items-center justify-center shrink-0 transition-all duration-500 z-10 ${bubbleClass}`}>
+                    <div className={`w-14 h-14 rounded-full border-2 flex items-center justify-center shrink-0 transition-all duration-500 z-10 ${bubbleClass}`}>
                         {isFinished ? (
                             <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>
                         ) : isCancelled ? (
@@ -125,10 +123,10 @@ const MilestoneTimeline = ({ statusName, statusSequence, hasJT, lastStatusSequen
                     </div>
 
                     <div className={`flex-1 px-4 mt-2 ${isLeft ? 'text-left' : 'text-right'}`}>
-                        <p className={`font-bold text-lg leading-tight ${isCancelled ? 'text-red-600' : isCurrent ? 'text-blue-700' : 'text-slate-800'}`}>
+                        <p className={`font-bold text-lg leading-tight ${isCancelled ? 'text-[#ef4444]' : isCurrent ? 'text-[#3b82f6]' : 'text-slate-800'}`}>
                             {step.label}
                         </p>
-                        <p className={`text-xs font-bold uppercase tracking-widest mt-1 ${isCancelled ? 'text-red-500' : isCurrent ? 'text-blue-500' : isFinished ? 'text-green-600' : 'text-slate-400'}`}>
+                        <p className={`text-[10px] font-bold uppercase tracking-widest mt-1 ${isCancelled ? 'text-red-400' : isCurrent ? 'text-blue-500' : isFinished ? 'text-[#84cc16]' : 'text-slate-400'}`}>
                             {isCancelled ? 'Terminated' : isCurrent ? 'On Progress' : isFinished ? 'Finished' : 'Pending'}
                         </p>
                     </div>

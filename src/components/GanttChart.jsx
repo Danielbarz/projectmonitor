@@ -76,19 +76,19 @@ const GanttChart = ({ projects = [] }) => {
         let end = isCompleted ? (p.actual_rfs || p.target_rfs) : p.target_rfs;
         
         // Color Logic
-        let color = 'bg-blue-500'; // Ongoing
+        let color = 'bg-[#06B6D4]'; // Ongoing (Cyan)
         if (isCompleted) {
             const actualDate = new Date(p.actual_rfs);
             const targetDate = new Date(p.target_rfs);
             
             if (p.actual_rfs && p.target_rfs) {
                 if (actualDate <= targetDate) {
-                    color = 'bg-green-500';
+                    color = 'bg-[#14B8A6]'; // Teal
                 } else {
-                    color = 'bg-red-500';
+                    color = 'bg-[#E31E24]'; // Red
                 }
             } else {
-                color = 'bg-green-500'; // Default if dates missing
+                color = 'bg-[#14B8A6]'; // Default Completed
             }
         }
 

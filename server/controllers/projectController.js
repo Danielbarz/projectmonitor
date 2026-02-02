@@ -68,6 +68,13 @@ exports.getProjectById = async (req, res) => {
     
     projectData.notes = notesRes.rows;
 
+    // Check for JT history
+    const jtCheck = await pool.query(
+        'SELECT 1 FROM project_status WHERE project_id = $1 AND status_id = 3 LIMIT 1',
+        [id]
+    );
+    projectData.has_jt_history = jtCheck.rows.length > 0;
+
     res.json(projectData);
   } catch (err) {
     console.error(err.message);
