@@ -34,11 +34,11 @@ const Dashboard = () => {
   // Filter Logic
   const filteredProjects = useMemo(() => {
     return allProjects.filter(p => {
-        const matchesSearch = p.order_id?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+        const matchesSearch = p.order_id?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                              p.lokasi?.toLowerCase().includes(searchQuery.toLowerCase());
-        
+
         if (!startDate || !endDate) return matchesSearch;
-        
+
         const projectDate = new Date(p.input_date || p.created_at);
         const start = new Date(startDate);
         const end = new Date(endDate);
@@ -59,7 +59,7 @@ const Dashboard = () => {
     const jt = filteredProjects.filter(p => p.status_name === 'JT').length;
     const cancelled = filteredProjects.filter(p => p.status_name === 'Cancelled').length;
     const ogp = total - completed - jt - cancelled;
-    
+
     const on_time_rfs = filteredProjects.filter(p => {
         if (!p.actual_rfs || !p.target_rfs) return false;
         return new Date(p.actual_rfs) <= new Date(p.target_rfs);
@@ -74,7 +74,7 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-slate-50 font-['Carlito']">
       <Sidebar />
-      
+
       <div className="ml-64 flex flex-col min-h-screen">
         <Header />
 
@@ -87,16 +87,16 @@ const Dashboard = () => {
             </div>
 
             {/* Filters Bar (Compact) */}
-            <div className="bg-slate-800 rounded-2xl p-3 mb-8 flex items-center justify-between gap-4 shadow-lg">
+            <div className="bg-slate-800 rounded-xl p-3 mb-8 flex items-center justify-between gap-4 shadow-lg">
               <div className="w-60">
                 <DateRangePicker startDate={startDate} endDate={endDate} onChange={handleDateChange} />
               </div>
 
               <div className="w-full max-w-xs">
-                <div className="bg-slate-100 h-10 rounded-full px-5 flex items-center justify-between hover:bg-white transition-colors border-2 border-transparent focus-within:border-red-500/50 group">
-                  <input 
-                    type="text" 
-                    placeholder="Search Order ID, Location..." 
+                <div className="bg-slate-100 h-10 rounded-xl px-5 flex items-center justify-between hover:bg-white transition-colors border-2 border-transparent focus-within:border-red-500/50 group">
+                  <input
+                    type="text"
+                    placeholder="Search Order ID, Location..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="bg-transparent border-none outline-none text-sm w-full text-slate-700 placeholder-slate-400"
@@ -114,52 +114,51 @@ const Dashboard = () => {
                 <>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                    {[
-                     { 
-                       label: 'Total Project', 
-                       value: stats.total_projects, 
-                       color: 'text-amber-700', 
-                       border: 'border-amber-500', 
+                     {
+                       label: 'Total Project',
+                       value: stats.total_projects,
+                       color: 'text-amber-700',
+                       border: 'border-amber-500',
                        grad: 'from-white to-amber-100',
                        icon: (
-                         <svg className="w-12 h-12 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                         <svg className="w-12 h-12 text-amber-500" viewBox="0 0 24 24" fill="currentColor">
+                           <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
                          </svg>
                        )
                      },
-                     { 
-                       label: 'OGP', 
-                       value: stats.ogp, 
-                       color: 'text-teal-700', 
-                       border: 'border-teal-500', 
+                     {
+                       label: 'OGP',
+                       value: stats.ogp,
+                       color: 'text-teal-700',
+                       border: 'border-teal-500',
                        grad: 'from-white to-teal-100',
                        icon: (
-                         <svg className="w-12 h-12 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" strokeDasharray="4 4"></path>
+                         <svg className="w-12 h-12 text-teal-500" viewBox="0 0 24 24" fill="currentColor">
+                           <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm4.2 14.2L11 13V7h1.5v5.2l4.5 2.7-.8 1.3z"/>
                          </svg>
                        )
                      },
-                     { 
-                       label: 'JT', 
-                       value: stats.jt, 
-                       color: 'text-red-700', 
-                       border: 'border-red-600', 
+                     {
+                       label: 'JT',
+                       value: stats.jt,
+                       color: 'text-red-700',
+                       border: 'border-red-600',
                        grad: 'from-white to-red-100',
                        icon: (
-                         <svg className="w-12 h-12 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M5 2h14v5c0 3-3 3-3 5s3 2 3 5v5H5v-5c0-3 3-3 3-5s-3-2-3-5V2z"></path>
+                         <svg className="w-12 h-12 text-red-600" viewBox="0 0 24 24" fill="currentColor">
+                           <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>
                          </svg>
                        )
                      },
-                     { 
-                       label: 'Completed', 
-                       value: stats.completed, 
-                       color: 'text-cyan-700', 
-                       border: 'border-cyan-500', 
+                     {
+                       label: 'Completed',
+                       value: stats.completed,
+                       color: 'text-cyan-700',
+                       border: 'border-cyan-500',
                        grad: 'from-white to-cyan-100',
                        icon: (
-                         <svg className="w-12 h-12 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                         <svg className="w-12 h-12 text-cyan-500" viewBox="0 0 24 24" fill="currentColor">
+                           <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                          </svg>
                        )
                      }
@@ -178,7 +177,7 @@ const Dashboard = () => {
 
                 {/* Charts Section */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-                  
+
                   {/* Chart 1: Project Status */}
                   <div className="bg-white rounded-xl p-6 shadow-sm flex flex-col items-center">
                     <h3 className="text-lg font-bold text-slate-800 mb-6 text-center uppercase tracking-wider text-sm opacity-70">Project Status</h3>
@@ -186,8 +185,8 @@ const Dashboard = () => {
                         <div className="relative w-48 h-48">
                             <div className="w-full h-full rounded-full shadow-inner"
                                 style={{
-                                    background: stats.total_projects > 0 
-                                        ? `conic-gradient(#14B8A6 0% ${(stats.completed/stats.total_projects)*100}%, #1F2A44 ${(stats.completed/stats.total_projects)*100}% ${((stats.completed+stats.ogp)/stats.total_projects)*100}%, #f59e0b ${((stats.completed+stats.ogp)/stats.total_projects)*100}% 100%)` 
+                                    background: stats.total_projects > 0
+                                        ? `conic-gradient(#14B8A6 0% ${(stats.completed/stats.total_projects)*100}%, #1F2A44 ${(stats.completed/stats.total_projects)*100}% ${((stats.completed+stats.ogp)/stats.total_projects)*100}%, #f59e0b ${((stats.completed+stats.ogp)/stats.total_projects)*100}% 100%)`
                                         : '#f1f5f9'
                                 }}
                             />
