@@ -319,7 +319,7 @@ const AllProjects = () => {
                       </tr>
                     ) : (
                       currentItems.map((project, index) => (
-                        <tr key={index} className="hover:bg-slate-50/80 transition-colors">
+                        <tr key={index} className="hover:bg-slate-50/80 transition-colors animate-fade-in-up" style={{ animationDelay: `${index * 50}ms` }}>
                           <td className="px-6 py-4 text-sm font-bold text-slate-700">{project.order_id}</td>
                           <td className="px-6 py-4 text-sm text-slate-600">{formatDate(project.input_date)}</td>
                           <td className="px-6 py-4 text-sm text-slate-600 font-medium">{project.layanan_name || '-'}</td>

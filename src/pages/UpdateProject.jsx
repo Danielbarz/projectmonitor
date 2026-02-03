@@ -263,8 +263,8 @@ const UpdateProject = () => {
 
                           {/* Pending New Note Preview */}
                           {newNote && (
-                            <div className="relative pl-10 group animate-in slide-in-from-left-2 duration-200">
-                                <div className="absolute left-0 top-1.5 w-4 h-4 rounded-full border-4 border-white shadow-sm z-10 bg-red-600 ring-4 ring-red-50"></div>
+                            <div className="relative pl-10 group animate-note-enter">
+                                <div className="absolute left-0 top-1.5 w-4 h-4 rounded-full border-4 border-white shadow-sm z-10 bg-red-600 ring-4 ring-red-50 animate-success-pulse"></div>
                                 <div className="flex flex-col gap-1">
                                     <span className="text-red-600 text-sm font-bold tracking-tight">Draft Update</span>
                                     <div className="text-slate-800 text-base font-bold whitespace-pre-wrap italic">
@@ -299,7 +299,7 @@ const UpdateProject = () => {
                    <div className="absolute bottom-6 left-1/2 -translate-x-1/2">
                       <button
                         onClick={() => setIsNoteModalOpen(true)}
-                        className="flex items-center gap-3 bg-slate-800 text-white px-8 py-2.5 rounded-xl hover:bg-slate-900 transition-colors shadow-lg active:scale-95"
+                        className="flex items-center gap-3 bg-slate-800 text-white px-8 py-2.5 rounded-xl hover:bg-slate-900 transition-all shadow-lg animate-press hover:scale-105 hover:shadow-xl"
                       >
                         <span className="text-xl font-bold">+</span>
                         <span className="font-bold">Add New Note</span>
@@ -373,18 +373,18 @@ const UpdateProject = () => {
 
                          {/* New Note Modal */}
                          {isNoteModalOpen && (
-                           <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-                              <div className="bg-white rounded-xl w-full max-w-lg shadow-2xl p-8 relative animate-in zoom-in-95 duration-200">
+                           <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-modal-backdrop">
+                              <div className="bg-white rounded-xl w-full max-w-lg shadow-2xl p-8 relative animate-modal-content">
                                  <h2 className="text-3xl font-bold text-slate-800 mb-6">New Note</h2>
                                  <textarea
                                    value={tempNote}
                                    onChange={(e) => setTempNote(e.target.value)}
-                                   className="w-full h-40 bg-slate-50 rounded-xl p-4 text-slate-800 placeholder-slate-400 text-lg border border-slate-200 focus:border-red-600 focus:ring-1 focus:ring-red-600 outline-none resize-none mb-8"
+                                   className="w-full h-40 bg-slate-50 rounded-xl p-4 text-slate-800 placeholder-slate-400 text-lg border border-slate-200 focus:border-red-600 focus:ring-1 focus:ring-red-600 outline-none resize-none mb-8 transition-all"
                                    placeholder="Write your update here ..."
                                  ></textarea>
                                  <div className="flex gap-4">
-                                   <button onClick={() => { setIsNoteModalOpen(false); setTempNote(''); }} className="flex-1 h-12 rounded-xl border-2 border-slate-300 text-slate-500 font-bold text-xl hover:bg-slate-50 transition-colors">Cancel</button>
-                                   <button onClick={handleAddNote} className="flex-1 flex items-center justify-center gap-3 h-12 rounded-xl bg-red-600 text-white font-bold text-xl hover:bg-red-700 transition-colors shadow-lg group">Save Note</button>
+                                   <button onClick={() => { setIsNoteModalOpen(false); setTempNote(''); }} className="flex-1 h-12 rounded-xl border-2 border-slate-300 text-slate-500 font-bold text-xl hover:bg-slate-50 transition-all animate-press">Cancel</button>
+                                   <button onClick={handleAddNote} className="flex-1 flex items-center justify-center gap-3 h-12 rounded-xl bg-red-600 text-white font-bold text-xl hover:bg-red-700 transition-all shadow-lg animate-press hover:scale-105">Save Note</button>
                                  </div>
                               </div>
                            </div>
@@ -392,8 +392,8 @@ const UpdateProject = () => {
 
                          {/* Edit Status Modal */}
                          {isMilestoneModalOpen && (
-                           <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-                              <div className="bg-white rounded-xl w-full max-w-md shadow-2xl p-8 relative animate-in zoom-in-95 duration-200">
+                           <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-modal-backdrop">
+                              <div className="bg-white rounded-xl w-full max-w-md shadow-2xl p-8 relative animate-modal-content">
                                  <h2 className="text-3xl font-bold text-slate-800 mb-6">Update Status</h2>
 
                                  <div className="space-y-4 mb-8">
@@ -402,7 +402,7 @@ const UpdateProject = () => {
                                        name="status_id"
                                        value={formData.status_id}
                                        onChange={handleChange}
-                                       className="w-full h-14 px-4 bg-slate-100 rounded-xl border-none outline-none focus:ring-2 focus:ring-red-500 font-bold text-slate-800 text-lg"
+                                       className="w-full h-14 px-4 bg-slate-100 rounded-xl border-none outline-none focus:ring-2 focus:ring-red-500 font-bold text-slate-800 text-lg transition-all"
                                      >
                                          <option value="">Select Status</option>
                                          {masterData.status.map(s => (
@@ -414,9 +414,9 @@ const UpdateProject = () => {
                                  <div className="flex gap-4">
                                    <button
                                        onClick={() => setIsMilestoneModalOpen(false)}
-                                       className="flex-1 h-12 rounded-xl border-2 border-slate-300 text-slate-500 font-bold text-xl hover:bg-slate-50 transition-colors"
+                                       className="flex-1 h-12 rounded-xl bg-green-500 text-white font-bold text-xl hover:bg-green-600 transition-all shadow-lg animate-press hover:scale-105"
                                    >
-                                       Done
+                                       ✓ Done
                                    </button>
                                  </div>
                               </div>

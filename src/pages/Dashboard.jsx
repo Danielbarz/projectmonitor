@@ -4,6 +4,9 @@ import Header from '../components/Header';
 import GanttChart from '../components/GanttChart';
 import ProjectMap from '../components/ProjectMap';
 import DateRangePicker from '../components/DateRangePicker';
+import AnimatedCounter from '../components/AnimatedCounter';
+import AnimatedDonutChart from '../components/AnimatedDonutChart';
+import AnimatedMultiDonut from '../components/AnimatedMultiDonut';
 
 const Dashboard = () => {
   const [startDate, setStartDate] = useState('');
@@ -109,7 +112,20 @@ const Dashboard = () => {
             </div>
 
             {loading ? (
-                <div className="py-20 text-center text-slate-400 font-bold animate-pulse">Loading dashboard data...</div>
+                <div className="space-y-8 animate-fade-in">
+                  {/* KPI Skeleton */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {[1,2,3,4].map((i) => (
+                      <div key={i} className="bg-white rounded-xl p-6 h-28 skeleton"></div>
+                    ))}
+                  </div>
+                  {/* Chart Skeleton */}
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    {[1,2,3].map((i) => (
+                      <div key={i} className="bg-white rounded-xl p-6 h-80 skeleton"></div>
+                    ))}
+                  </div>
+                </div>
             ) : (
                 <>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -163,10 +179,10 @@ const Dashboard = () => {
                        )
                      }
                    ].map((stat, idx) => (
-                     <div key={idx} className={`bg-gradient-to-r ${stat.grad} backdrop-blur-xl rounded-xl p-6 shadow-lg border border-white/50 border-l-4 ${stat.border} flex items-center justify-between hover:shadow-xl hover:bg-white/90 transition-all duration-300 group`}>
+                     <div key={idx} className={`bg-gradient-to-r ${stat.grad} backdrop-blur-xl rounded-xl p-6 shadow-lg border border-white/50 border-l-4 ${stat.border} flex items-center justify-between hover:shadow-xl hover:bg-white/90 transition-all duration-300 group animate-fade-in-up`} style={{ animationDelay: `${idx * 100}ms` }}>
                        <div>
                          <p className="text-slate-600 text-xs font-bold uppercase mb-1 opacity-60">{stat.label}</p>
-                         <p className={`text-4xl font-bold ${stat.color}`}>{stat.value}</p>
+                         <p className={`text-4xl font-bold ${stat.color}`}><AnimatedCounter value={stat.value} duration={800} /></p>
                        </div>
                        <div className="transition-transform group-hover:scale-110 duration-300">
                           {stat.icon}
@@ -179,28 +195,26 @@ const Dashboard = () => {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
 
                   {/* Chart 1: Project Status */}
-                  <div className="bg-white/70 backdrop-blur-xl rounded-xl p-6 shadow-lg border border-white/50 flex flex-col items-center hover:bg-white/80 transition-all duration-300">
+                  <div className="bg-white/70 backdrop-blur-xl rounded-xl p-6 shadow-lg border border-white/50 flex flex-col items-center hover:bg-white/80 transition-all duration-300 animate-fade-in-up" style={{ animationDelay: '400ms' }}>
                     <h3 className="text-lg font-bold text-slate-800 mb-6 text-center uppercase tracking-wider text-sm opacity-70">Project Status</h3>
                     <div className="flex flex-col items-center w-full">
-                        <div className="relative w-48 h-48">
-                            <div className="w-full h-full rounded-full shadow-inner"
-                                style={{
-                                    background: stats.total_projects > 0
-                                        ? `conic-gradient(#14B8A6 0% ${(stats.completed/stats.total_projects)*100}%, #1F2A44 ${(stats.completed/stats.total_projects)*100}% ${((stats.completed+stats.ogp)/stats.total_projects)*100}%, #f59e0b ${((stats.completed+stats.ogp)/stats.total_projects)*100}% 100%)`
-                                        : '#f1f5f9'
-                                }}
-                            />
-                            <div className="absolute inset-6 bg-white rounded-full flex flex-col items-center justify-center shadow-sm">
-                                <span className="text-4xl font-bold text-slate-800">{stats.total_projects}</span>
-                                <span className="text-[10px] font-bold text-slate-400 uppercase">Projects</span>
-                            </div>
-                        </div>
+                        <AnimatedMultiDonut
+                          segments={[
+                            { value: stats.completed, color: '#14B8A6', label: 'Done' },
+                            { value: stats.ogp, color: '#1F2A44', label: 'OGP' },
+                            { value: stats.jt, color: '#f59e0b', label: 'JT' }
+                          ]}
+                          total={stats.total_projects}
+                          centerValue={stats.total_projects}
+                          centerLabel="Projects"
+                          duration={1500}
+                        />
                         <div className="mt-8 flex justify-center gap-4 w-full">
                             {[{ label: 'Done', c: 'bg-[#14B8A6]', v: stats.completed }, { label: 'OGP', c: 'bg-[#1F2A44]', v: stats.ogp }, { label: 'JT', c: 'bg-[#f59e0b]', v: stats.jt }].map((item, i) => (
                                 <div key={i} className="flex flex-col items-center">
                                     <div className="flex items-center gap-1.5 mb-1">
                                         <span className={`w-2 h-2 rounded-full ${item.c}`}></span>
-                                        <span className="text-xl font-bold text-slate-700">{item.v}</span>
+                                        <span className="text-xl font-bold text-slate-700"><AnimatedCounter value={item.v} duration={800} /></span>
                                     </div>
                                     <span className="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">{item.label}</span>
                                 </div>
@@ -210,26 +224,24 @@ const Dashboard = () => {
                   </div>
 
                   {/* Chart 2: Target RFS Achievement */}
-                  <div className="bg-white/70 backdrop-blur-xl rounded-xl p-6 shadow-lg border border-white/50 flex flex-col items-center hover:bg-white/80 transition-all duration-300">
+                  <div className="bg-white/70 backdrop-blur-xl rounded-xl p-6 shadow-lg border border-white/50 flex flex-col items-center hover:bg-white/80 transition-all duration-300 animate-fade-in-up" style={{ animationDelay: '500ms' }}>
                     <h3 className="text-lg font-bold text-slate-800 mb-6 text-center uppercase tracking-wider text-sm opacity-70">RFS Achievement</h3>
                     <div className="flex flex-col items-center w-full">
-                        <div className="relative w-48 h-48">
-                            <div className="w-full h-full rounded-full shadow-inner"
-                                style={{ background: `conic-gradient(#14B8A6 0% ${onTimePercentage}%, #f1f5f9 ${onTimePercentage}% 100%)` }}
-                            />
-                            <div className="absolute inset-6 bg-white rounded-full flex flex-col items-center justify-center shadow-sm">
-                                <span className="text-4xl font-bold text-slate-800">{onTimePercentage}%</span>
-                                <span className="text-[10px] font-bold text-slate-400 uppercase">On Time</span>
-                            </div>
-                        </div>
+                        <AnimatedDonutChart
+                          percentage={onTimePercentage}
+                          color="#14B8A6"
+                          duration={1500}
+                          centerSuffix="%"
+                          centerLabel="On Time"
+                        />
                         <div className="mt-8 flex items-center justify-center gap-6 w-full">
                             <div className="flex flex-col items-center">
-                                <span className="text-xl font-bold text-slate-700">{stats.on_time_rfs}</span>
+                                <span className="text-xl font-bold text-slate-700"><AnimatedCounter value={stats.on_time_rfs} duration={800} /></span>
                                 <span className="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">On Time</span>
                             </div>
                             <div className="w-px h-8 bg-slate-100"></div>
                             <div className="flex flex-col items-center">
-                                <span className="text-xl font-bold text-slate-700">{stats.completed}</span>
+                                <span className="text-xl font-bold text-slate-700"><AnimatedCounter value={stats.completed} duration={800} /></span>
                                 <span className="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">Completed</span>
                             </div>
                         </div>
@@ -237,26 +249,24 @@ const Dashboard = () => {
                   </div>
 
                   {/* Chart 3: Overall Achievement */}
-                  <div className="bg-white/70 backdrop-blur-xl rounded-xl p-6 shadow-lg border border-white/50 flex flex-col items-center hover:bg-white/80 transition-all duration-300">
+                  <div className="bg-white/70 backdrop-blur-xl rounded-xl p-6 shadow-lg border border-white/50 flex flex-col items-center hover:bg-white/80 transition-all duration-300 animate-fade-in-up" style={{ animationDelay: '600ms' }}>
                     <h3 className="text-lg font-bold text-slate-800 mb-6 text-center uppercase tracking-wider text-sm opacity-70">Overall Progress</h3>
                     <div className="flex flex-col items-center w-full">
-                        <div className="relative w-48 h-48">
-                            <div className="w-full h-full rounded-full shadow-inner"
-                                style={{ background: `conic-gradient(#06B6D4 0% ${achievedPercentage}%, #f1f5f9 ${achievedPercentage}% 100%)` }}
-                            />
-                            <div className="absolute inset-6 bg-white rounded-full flex flex-col items-center justify-center shadow-sm">
-                                <span className="text-4xl font-bold text-slate-800">{achievedPercentage}%</span>
-                                <span className="text-[10px] font-bold text-slate-400 uppercase">Progress</span>
-                            </div>
-                        </div>
+                        <AnimatedDonutChart
+                          percentage={achievedPercentage}
+                          color="#06B6D4"
+                          duration={1500}
+                          centerSuffix="%"
+                          centerLabel="Progress"
+                        />
                         <div className="mt-8 flex items-center justify-center gap-6 w-full">
                             <div className="flex flex-col items-center">
-                                <span className="text-xl font-bold text-slate-700">{stats.completed}</span>
+                                <span className="text-xl font-bold text-slate-700"><AnimatedCounter value={stats.completed} duration={800} /></span>
                                 <span className="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">Finished</span>
                             </div>
                             <div className="w-px h-8 bg-slate-100"></div>
                             <div className="flex flex-col items-center">
-                                <span className="text-xl font-bold text-slate-700">{stats.total_projects}</span>
+                                <span className="text-xl font-bold text-slate-700"><AnimatedCounter value={stats.total_projects} duration={800} /></span>
                                 <span className="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">Total</span>
                             </div>
                         </div>
