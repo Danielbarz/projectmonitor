@@ -5,6 +5,9 @@ import GanttChart from '../components/GanttChart';
 import ProjectMap from '../components/ProjectMap';
 import DateRangePicker from '../components/DateRangePicker';
 import { useAuth } from '../context/AuthContext';
+import AnimatedCounter from '../components/AnimatedCounter';
+import AnimatedDonutChart from '../components/AnimatedDonutChart';
+import AnimatedMultiDonut from '../components/AnimatedMultiDonut';
 
 const Dashboard = () => {
   const { token } = useAuth();
@@ -45,11 +48,11 @@ const Dashboard = () => {
   // Filter Logic
   const filteredProjects = useMemo(() => {
     return allProjects.filter(p => {
-        const matchesSearch = p.order_id?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+        const matchesSearch = p.order_id?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                              p.lokasi?.toLowerCase().includes(searchQuery.toLowerCase());
-        
+
         if (!startDate || !endDate) return matchesSearch;
-        
+
         const projectDate = new Date(p.input_date || p.created_at);
         const start = new Date(startDate);
         const end = new Date(endDate);
@@ -70,7 +73,7 @@ const Dashboard = () => {
     const jt = filteredProjects.filter(p => p.status_name === 'JT').length;
     const cancelled = filteredProjects.filter(p => p.status_name === 'Cancelled').length;
     const ogp = total - completed - jt - cancelled;
-    
+
     const on_time_rfs = filteredProjects.filter(p => {
         if (!p.actual_rfs || !p.target_rfs) return false;
         return new Date(p.actual_rfs) <= new Date(p.target_rfs);
@@ -85,7 +88,7 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-slate-50 font-['Carlito']">
       <Sidebar />
-      
+
       <div className="ml-64 flex flex-col min-h-screen">
         <Header />
 
@@ -98,16 +101,16 @@ const Dashboard = () => {
             </div>
 
             {/* Filters Bar (Compact) */}
-            <div className="bg-slate-800 rounded-2xl p-3 mb-8 flex items-center justify-between gap-4 shadow-lg">
+            <div className="bg-slate-800 rounded-xl p-3 mb-8 flex items-center justify-between gap-4 shadow-lg">
               <div className="w-60">
                 <DateRangePicker startDate={startDate} endDate={endDate} onChange={handleDateChange} />
               </div>
 
               <div className="w-full max-w-xs">
-                <div className="bg-slate-100 h-10 rounded-full px-5 flex items-center justify-between hover:bg-white transition-colors border-2 border-transparent focus-within:border-red-500/50 group">
-                  <input 
-                    type="text" 
-                    placeholder="Search Order ID, Location..." 
+                <div className="bg-slate-100 h-10 rounded-xl px-5 flex items-center justify-between hover:bg-white transition-colors border-2 border-transparent focus-within:border-red-500/50 group">
+                  <input
+                    type="text"
+                    placeholder="Search Order ID, Location..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="bg-transparent border-none outline-none text-sm w-full text-slate-700 placeholder-slate-400"
@@ -120,65 +123,77 @@ const Dashboard = () => {
             </div>
 
             {loading ? (
-                <div className="py-20 text-center text-slate-400 font-bold animate-pulse">Loading dashboard data...</div>
+                <div className="space-y-8 animate-fade-in">
+                  {/* KPI Skeleton */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {[1,2,3,4].map((i) => (
+                      <div key={i} className="bg-white rounded-xl p-6 h-28 skeleton"></div>
+                    ))}
+                  </div>
+                  {/* Chart Skeleton */}
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    {[1,2,3].map((i) => (
+                      <div key={i} className="bg-white rounded-xl p-6 h-80 skeleton"></div>
+                    ))}
+                  </div>
+                </div>
             ) : (
                 <>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                    {[
-                     { 
-                       label: 'Total Project', 
-                       value: stats.total_projects, 
-                       color: 'text-amber-700', 
-                       border: 'border-amber-500', 
-                       grad: 'from-white to-amber-100',
+                     {
+                       label: 'Total Project',
+                       value: stats.total_projects,
+                       color: 'text-amber-700',
+                       border: 'border-amber-500',
+                       grad: 'from-white/80 to-amber-100/60',
                        icon: (
-                         <svg className="w-12 h-12 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                         <svg className="w-12 h-12 text-amber-500" viewBox="0 0 24 24" fill="currentColor">
+                           <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
                          </svg>
                        )
                      },
-                     { 
-                       label: 'OGP', 
-                       value: stats.ogp, 
-                       color: 'text-teal-700', 
-                       border: 'border-teal-500', 
-                       grad: 'from-white to-teal-100',
+                     {
+                       label: 'OGP',
+                       value: stats.ogp,
+                       color: 'text-teal-700',
+                       border: 'border-teal-500',
+                       grad: 'from-white/80 to-teal-100/60',
                        icon: (
-                         <svg className="w-12 h-12 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" strokeDasharray="4 4"></path>
+                         <svg className="w-12 h-12 text-teal-500" viewBox="0 0 24 24" fill="currentColor">
+                           <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm4.2 14.2L11 13V7h1.5v5.2l4.5 2.7-.8 1.3z"/>
                          </svg>
                        )
                      },
-                     { 
-                       label: 'JT', 
-                       value: stats.jt, 
-                       color: 'text-red-700', 
-                       border: 'border-red-600', 
-                       grad: 'from-white to-red-100',
+                     {
+                       label: 'JT',
+                       value: stats.jt,
+                       color: 'text-red-700',
+                       border: 'border-red-600',
+                       grad: 'from-white/80 to-red-100/60',
                        icon: (
-                         <svg className="w-12 h-12 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M5 2h14v5c0 3-3 3-3 5s3 2 3 5v5H5v-5c0-3 3-3 3-5s-3-2-3-5V2z"></path>
+                         <svg className="w-12 h-12 text-red-600" viewBox="0 0 24 24" fill="currentColor">
+                           <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>
                          </svg>
                        )
                      },
-                     { 
-                       label: 'Completed', 
-                       value: stats.completed, 
-                       color: 'text-cyan-700', 
-                       border: 'border-cyan-500', 
-                       grad: 'from-white to-cyan-100',
+                     {
+                       label: 'Completed',
+                       value: stats.completed,
+                       color: 'text-cyan-700',
+                       border: 'border-cyan-500',
+                       grad: 'from-white/80 to-cyan-100/60',
                        icon: (
-                         <svg className="w-12 h-12 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                         <svg className="w-12 h-12 text-cyan-500" viewBox="0 0 24 24" fill="currentColor">
+                           <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                          </svg>
                        )
                      }
                    ].map((stat, idx) => (
-                     <div key={idx} className={`bg-gradient-to-r ${stat.grad} rounded-xl p-6 shadow-sm border-l-4 ${stat.border} flex items-center justify-between hover:shadow-md transition-all group`}>
+                     <div key={idx} className={`bg-gradient-to-r ${stat.grad} backdrop-blur-xl rounded-xl p-6 shadow-lg border border-white/50 border-l-4 ${stat.border} flex items-center justify-between hover:shadow-xl hover:bg-white/90 transition-all duration-300 group animate-fade-in-up`} style={{ animationDelay: `${idx * 100}ms` }}>
                        <div>
                          <p className="text-slate-600 text-xs font-bold uppercase mb-1 opacity-60">{stat.label}</p>
-                         <p className={`text-4xl font-bold ${stat.color}`}>{stat.value}</p>
+                         <p className={`text-4xl font-bold ${stat.color}`}><AnimatedCounter value={stat.value} duration={800} /></p>
                        </div>
                        <div className="transition-transform group-hover:scale-110 duration-300">
                           {stat.icon}
@@ -189,30 +204,28 @@ const Dashboard = () => {
 
                 {/* Charts Section */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-                  
+
                   {/* Chart 1: Project Status */}
-                  <div className="bg-white rounded-xl p-6 shadow-sm flex flex-col items-center">
+                  <div className="bg-white/70 backdrop-blur-xl rounded-xl p-6 shadow-lg border border-white/50 flex flex-col items-center hover:bg-white/80 transition-all duration-300 animate-fade-in-up" style={{ animationDelay: '400ms' }}>
                     <h3 className="text-lg font-bold text-slate-800 mb-6 text-center uppercase tracking-wider text-sm opacity-70">Project Status</h3>
                     <div className="flex flex-col items-center w-full">
-                        <div className="relative w-48 h-48">
-                            <div className="w-full h-full rounded-full shadow-inner"
-                                style={{
-                                    background: stats.total_projects > 0 
-                                        ? `conic-gradient(#14B8A6 0% ${(stats.completed/stats.total_projects)*100}%, #1F2A44 ${(stats.completed/stats.total_projects)*100}% ${((stats.completed+stats.ogp)/stats.total_projects)*100}%, #f59e0b ${((stats.completed+stats.ogp)/stats.total_projects)*100}% 100%)` 
-                                        : '#f1f5f9'
-                                }}
-                            />
-                            <div className="absolute inset-6 bg-white rounded-full flex flex-col items-center justify-center shadow-sm">
-                                <span className="text-4xl font-bold text-slate-800">{stats.total_projects}</span>
-                                <span className="text-[10px] font-bold text-slate-400 uppercase">Projects</span>
-                            </div>
-                        </div>
+                        <AnimatedMultiDonut
+                          segments={[
+                            { value: stats.completed, color: '#14B8A6', label: 'Done' },
+                            { value: stats.ogp, color: '#1F2A44', label: 'OGP' },
+                            { value: stats.jt, color: '#f59e0b', label: 'JT' }
+                          ]}
+                          total={stats.total_projects}
+                          centerValue={stats.total_projects}
+                          centerLabel="Projects"
+                          duration={1500}
+                        />
                         <div className="mt-8 flex justify-center gap-4 w-full">
                             {[{ label: 'Done', c: 'bg-[#14B8A6]', v: stats.completed }, { label: 'OGP', c: 'bg-[#1F2A44]', v: stats.ogp }, { label: 'JT', c: 'bg-[#f59e0b]', v: stats.jt }].map((item, i) => (
                                 <div key={i} className="flex flex-col items-center">
                                     <div className="flex items-center gap-1.5 mb-1">
                                         <span className={`w-2 h-2 rounded-full ${item.c}`}></span>
-                                        <span className="text-xl font-bold text-slate-700">{item.v}</span>
+                                        <span className="text-xl font-bold text-slate-700"><AnimatedCounter value={item.v} duration={800} /></span>
                                     </div>
                                     <span className="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">{item.label}</span>
                                 </div>
@@ -222,26 +235,24 @@ const Dashboard = () => {
                   </div>
 
                   {/* Chart 2: Target RFS Achievement */}
-                  <div className="bg-white rounded-xl p-6 shadow-sm flex flex-col items-center">
+                  <div className="bg-white/70 backdrop-blur-xl rounded-xl p-6 shadow-lg border border-white/50 flex flex-col items-center hover:bg-white/80 transition-all duration-300 animate-fade-in-up" style={{ animationDelay: '500ms' }}>
                     <h3 className="text-lg font-bold text-slate-800 mb-6 text-center uppercase tracking-wider text-sm opacity-70">RFS Achievement</h3>
                     <div className="flex flex-col items-center w-full">
-                        <div className="relative w-48 h-48">
-                            <div className="w-full h-full rounded-full shadow-inner"
-                                style={{ background: `conic-gradient(#14B8A6 0% ${onTimePercentage}%, #f1f5f9 ${onTimePercentage}% 100%)` }}
-                            />
-                            <div className="absolute inset-6 bg-white rounded-full flex flex-col items-center justify-center shadow-sm">
-                                <span className="text-4xl font-bold text-slate-800">{onTimePercentage}%</span>
-                                <span className="text-[10px] font-bold text-slate-400 uppercase">On Time</span>
-                            </div>
-                        </div>
+                        <AnimatedDonutChart
+                          percentage={onTimePercentage}
+                          color="#14B8A6"
+                          duration={1500}
+                          centerSuffix="%"
+                          centerLabel="On Time"
+                        />
                         <div className="mt-8 flex items-center justify-center gap-6 w-full">
                             <div className="flex flex-col items-center">
-                                <span className="text-xl font-bold text-slate-700">{stats.on_time_rfs}</span>
+                                <span className="text-xl font-bold text-slate-700"><AnimatedCounter value={stats.on_time_rfs} duration={800} /></span>
                                 <span className="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">On Time</span>
                             </div>
                             <div className="w-px h-8 bg-slate-100"></div>
                             <div className="flex flex-col items-center">
-                                <span className="text-xl font-bold text-slate-700">{stats.completed}</span>
+                                <span className="text-xl font-bold text-slate-700"><AnimatedCounter value={stats.completed} duration={800} /></span>
                                 <span className="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">Completed</span>
                             </div>
                         </div>
@@ -249,26 +260,24 @@ const Dashboard = () => {
                   </div>
 
                   {/* Chart 3: Overall Achievement */}
-                  <div className="bg-white rounded-xl p-6 shadow-sm flex flex-col items-center">
+                  <div className="bg-white/70 backdrop-blur-xl rounded-xl p-6 shadow-lg border border-white/50 flex flex-col items-center hover:bg-white/80 transition-all duration-300 animate-fade-in-up" style={{ animationDelay: '600ms' }}>
                     <h3 className="text-lg font-bold text-slate-800 mb-6 text-center uppercase tracking-wider text-sm opacity-70">Overall Progress</h3>
                     <div className="flex flex-col items-center w-full">
-                        <div className="relative w-48 h-48">
-                            <div className="w-full h-full rounded-full shadow-inner"
-                                style={{ background: `conic-gradient(#06B6D4 0% ${achievedPercentage}%, #f1f5f9 ${achievedPercentage}% 100%)` }}
-                            />
-                            <div className="absolute inset-6 bg-white rounded-full flex flex-col items-center justify-center shadow-sm">
-                                <span className="text-4xl font-bold text-slate-800">{achievedPercentage}%</span>
-                                <span className="text-[10px] font-bold text-slate-400 uppercase">Progress</span>
-                            </div>
-                        </div>
+                        <AnimatedDonutChart
+                          percentage={achievedPercentage}
+                          color="#06B6D4"
+                          duration={1500}
+                          centerSuffix="%"
+                          centerLabel="Progress"
+                        />
                         <div className="mt-8 flex items-center justify-center gap-6 w-full">
                             <div className="flex flex-col items-center">
-                                <span className="text-xl font-bold text-slate-700">{stats.completed}</span>
+                                <span className="text-xl font-bold text-slate-700"><AnimatedCounter value={stats.completed} duration={800} /></span>
                                 <span className="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">Finished</span>
                             </div>
                             <div className="w-px h-8 bg-slate-100"></div>
                             <div className="flex flex-col items-center">
-                                <span className="text-xl font-bold text-slate-700">{stats.total_projects}</span>
+                                <span className="text-xl font-bold text-slate-700"><AnimatedCounter value={stats.total_projects} duration={800} /></span>
                                 <span className="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">Total</span>
                             </div>
                         </div>

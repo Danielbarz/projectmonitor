@@ -28,18 +28,18 @@ const DateRangePicker = ({ startDate, endDate, onChange }) => {
     return date.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
   };
 
-  const displayValue = localStart && localEnd 
+  const displayValue = localStart && localEnd
     ? `${formatDate(localStart)} | ${formatDate(localEnd)}`
     : 'Select Date Range';
 
   return (
     <div className="relative flex-1 min-w-[200px]" ref={containerRef}>
       <label className="text-slate-300 text-xs font-bold uppercase tracking-wider mb-1 block">Start Date | End Date</label>
-      
+
       {/* Trigger Button */}
-      <button 
+      <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full bg-slate-100 rounded-lg h-10 px-4 flex items-center justify-between cursor-pointer hover:bg-white transition-colors group text-left"
+        className="w-full bg-slate-100 rounded-xl h-10 px-4 flex items-center justify-between cursor-pointer hover:bg-white transition-colors group text-left"
       >
         <span className={`text-sm font-medium ${localStart ? 'text-slate-700' : 'text-slate-400'}`}>
           {displayValue}
@@ -56,20 +56,20 @@ const DateRangePicker = ({ startDate, endDate, onChange }) => {
             <div className="flex flex-col gap-1">
               <label className="text-slate-600 text-xs font-bold uppercase">From</label>
               <div className="relative">
-                 <input 
-                    type="date" 
+                 <input
+                    type="date"
                     value={localStart}
                     onChange={(e) => setLocalStart(e.target.value)}
                     className="w-full h-10 px-3 bg-slate-50 rounded-lg border border-slate-200 text-sm text-slate-700 focus:outline-none focus:border-slate-400"
                  />
               </div>
             </div>
-            
+
             <div className="flex flex-col gap-1">
               <label className="text-slate-600 text-xs font-bold uppercase">To</label>
               <div className="relative">
-                 <input 
-                    type="date" 
+                 <input
+                    type="date"
                     value={localEnd}
                     onChange={(e) => setLocalEnd(e.target.value)}
                     className="w-full h-10 px-3 bg-slate-50 rounded-lg border border-slate-200 text-sm text-slate-700 focus:outline-none focus:border-slate-400"
@@ -78,7 +78,7 @@ const DateRangePicker = ({ startDate, endDate, onChange }) => {
             </div>
 
             <div className="flex gap-2 pt-2">
-               <button 
+               <button
                  onClick={() => {
                     setLocalStart('');
                     setLocalEnd('');
@@ -89,7 +89,7 @@ const DateRangePicker = ({ startDate, endDate, onChange }) => {
                >
                  Clear
                </button>
-               <button 
+               <button
                  onClick={handleApply}
                  className="flex-1 h-9 rounded-lg bg-slate-800 text-white text-sm font-bold hover:bg-slate-700 transition-colors"
                >

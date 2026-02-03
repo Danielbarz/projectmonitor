@@ -1,3 +1,225 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Animation Delay Utilities */
+@layer utilities {
+  .animation-delay-100 { animation-delay: 100ms; }
+  .animation-delay-200 { animation-delay: 200ms; }
+  .animation-delay-300 { animation-delay: 300ms; }
+  .animation-delay-400 { animation-delay: 400ms; }
+  .animation-delay-500 { animation-delay: 500ms; }
+}
+
+/* Animation Classes with Initial State */
+.animate-fade-in-up {
+  opacity: 0;
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+.animate-fade-in {
+  opacity: 0;
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.animate-slide-in-left {
+  opacity: 0;
+  transform: translateX(-20px);
+  animation: slideInLeft 0.4s ease-out forwards;
+}
+
+.animate-scale-in {
+  opacity: 0;
+  transform: scale(0.9);
+  animation: scaleIn 0.3s ease-out forwards;
+}
+
+/* Modal Animations */
+.animate-modal-backdrop {
+  animation: fadeIn 0.2s ease-out forwards;
+}
+
+.animate-modal-content {
+  animation: modalSlideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.animate-modal-bounce {
+  animation: modalBounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Success Animations */
+.animate-success-check {
+  animation: successCheck 0.6s ease-out forwards;
+}
+
+.animate-success-pulse {
+  animation: successPulse 0.8s ease-out forwards;
+}
+
+.animate-success-ring {
+  animation: successRing 0.6s ease-out forwards;
+}
+
+/* Note Entry Animation */
+.animate-note-enter {
+  animation: noteEnter 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Milestone Step Animation */
+.animate-milestone-step {
+  animation: milestoneStep 0.4s ease-out forwards;
+}
+
+.animate-milestone-fill {
+  animation: milestoneFill 0.8s ease-out forwards;
+}
+
+/* Button Press Animation */
+.animate-press {
+  transition: transform 0.1s ease-out;
+}
+.animate-press:active {
+  transform: scale(0.95);
+}
+
+/* Confetti/Celebration */
+.animate-confetti {
+  animation: confetti 1s ease-out forwards;
+}
+
+/* Gauge/Donut Chart Animation */
+.animate-gauge {
+  animation: gaugeRotate 1s ease-out forwards;
+}
+
+/* Skeleton Loader */
+.skeleton {
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* ============ KEYFRAMES ============ */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Modal Slide Up with Bounce */
+@keyframes modalSlideUp {
+  0% { opacity: 0; transform: translateY(50px) scale(0.9); }
+  60% { opacity: 1; transform: translateY(-10px) scale(1.02); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes modalBounce {
+  0% { opacity: 0; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.05); }
+  70% { transform: scale(0.95); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* Success Checkmark Animation */
+@keyframes successCheck {
+  0% { opacity: 0; transform: scale(0) rotate(-45deg); }
+  50% { opacity: 1; transform: scale(1.2) rotate(0deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+@keyframes successPulse {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+  50% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(34, 197, 94, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+}
+
+@keyframes successRing {
+  0% { transform: scale(0.8); opacity: 1; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+/* Note Entry Animation */
+@keyframes noteEnter {
+  0% { opacity: 0; transform: translateX(-30px) scale(0.9); }
+  60% { opacity: 1; transform: translateX(5px) scale(1.02); }
+  100% { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+/* Milestone Progress Animation */
+@keyframes milestoneStep {
+  0% { opacity: 0; transform: scale(0.5); }
+  60% { opacity: 1; transform: scale(1.2); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes milestoneFill {
+  0% { width: 0%; background-color: #dc2626; }
+  100% { width: 100%; background-color: #22c55e; }
+}
+
+/* Gauge Rotate */
+@keyframes gaugeRotate {
+  from { transform: rotate(-90deg); opacity: 0.5; }
+  to { transform: rotate(0deg); opacity: 1; }
+}
+
+/* Shimmer */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Confetti Particles */
+@keyframes confetti {
+  0% { opacity: 1; transform: translateY(0) rotate(0deg); }
+  100% { opacity: 0; transform: translateY(-100px) rotate(720deg); }
+}
+
+/* Shake for Errors */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-8px); }
+  40%, 80% { transform: translateX(8px); }
+}
+
+.animate-shake {
+  animation: shake 0.5s ease-out;
+}
+
+/* ============ SIDEBAR ============ */
+.sidebar-item {
+  position: relative;
+  overflow: hidden;
+}
+
+.sidebar-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 3px;
+  background: #dc2626;
+  transform: scaleY(0);
+  transition: transform 0.2s ease-out;
+}
+
+.sidebar-item:hover::before,
+.sidebar-item.active::before {
+  transform: scaleY(1);
+}

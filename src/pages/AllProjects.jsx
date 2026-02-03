@@ -33,7 +33,7 @@ const MultiSelectFilter = ({ label, options, selectedValues, onChange }) => {
 
   return (
     <div className="relative inline-block" ref={containerRef}>
-      <button 
+      <button
         onClick={() => setIsOpen(!isOpen)}
         className={`flex items-center gap-2 text-xs font-bold uppercase tracking-wider whitespace-nowrap hover:text-slate-700 transition-colors ${isActive ? 'text-blue-600' : 'text-slate-500'}`}
       >
@@ -52,15 +52,15 @@ const MultiSelectFilter = ({ label, options, selectedValues, onChange }) => {
         <div className="absolute top-full left-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-slate-100 p-1 z-50 animate-in fade-in zoom-in-95 duration-100">
             <div className="max-h-60 overflow-y-auto">
                 {options.map((opt) => (
-                    <label 
-                        key={opt} 
+                    <label
+                        key={opt}
                         className="flex items-center gap-2.5 px-3 py-1.5 rounded-lg hover:bg-slate-50 cursor-pointer group transition-colors"
                         onClick={() => toggleOption(opt)}
                     >
                         {/* Square Checkbox UI */}
                         <div className={`w-4 h-4 rounded border-2 flex items-center justify-center shrink-0 transition-all ${
-                            selectedValues.includes(opt) 
-                                ? 'bg-blue-600 border-blue-600' 
+                            selectedValues.includes(opt)
+                                ? 'bg-blue-600 border-blue-600'
                                 : 'border-slate-300 group-hover:border-slate-400 bg-white'
                         }`}>
                             {selectedValues.includes(opt) && (
@@ -69,7 +69,7 @@ const MultiSelectFilter = ({ label, options, selectedValues, onChange }) => {
                                 </svg>
                             )}
                         </div>
-                        
+
                         <span className={`text-[13px] font-medium transition-colors ${
                             selectedValues.includes(opt) ? 'text-slate-900 font-bold' : 'text-slate-600'
                         }`}>
@@ -80,7 +80,7 @@ const MultiSelectFilter = ({ label, options, selectedValues, onChange }) => {
             </div>
             {isActive && (
                 <div className="pt-2 mt-2 border-t border-slate-100">
-                    <button 
+                    <button
                         onClick={() => onChange([])}
                         className="w-full py-1.5 text-xs font-bold text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                     >
@@ -100,16 +100,16 @@ const AllProjects = () => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
-  
+
   // Multi-select Filter States
   const [selectedServices, setSelectedServices] = useState([]);
   const [selectedStatuses, setSelectedStatuses] = useState([]);
-  
+
   const [allProjects, setAllProjects] = useState([]);
   const [masterData, setMasterData] = useState({ layanan: [], status: [] });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  
+
   // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -126,7 +126,7 @@ const AllProjects = () => {
             ]);
 
             if (!projectsRes.ok) throw new Error('Failed to fetch projects');
-            
+
             const projectsData = await projectsRes.json();
             const masterData = await masterRes.json();
 
@@ -159,9 +159,9 @@ const AllProjects = () => {
   const filteredProjects = useMemo(() => {
     return allProjects.filter(p => {
         // Search Filter
-        const matchesSearch = p.order_id?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+        const matchesSearch = p.order_id?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                              p.lokasi?.toLowerCase().includes(searchQuery.toLowerCase());
-        
+
         // Service Filter (Multi)
         const matchesService = selectedServices.length === 0 || selectedServices.includes(p.layanan_name);
 
@@ -179,7 +179,7 @@ const AllProjects = () => {
             end.setHours(0,0,0,0);
             matchesDate = projectDate >= start && projectDate <= end;
         }
-        
+
         return matchesSearch && matchesService && matchesStatus && matchesDate;
     });
   }, [allProjects, searchQuery, startDate, endDate, selectedServices, selectedStatuses]);
@@ -219,7 +219,7 @@ const AllProjects = () => {
             });
             if (response.ok) {
                 alert('Database reset successful.');
-                window.location.reload(); 
+                window.location.reload();
             } else {
                 alert('Failed to reset database.');
             }
@@ -233,18 +233,18 @@ const AllProjects = () => {
   return (
     <div className="min-h-screen bg-slate-50 font-['Carlito']">
       <Sidebar />
-      
+
       <div className="ml-64 flex flex-col min-h-screen">
         <Header />
 
         <main className="flex-1 p-8">
           <div className="max-w-7xl mx-auto">
-            
+
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
               <h1 className="text-3xl font-bold text-slate-800">
                 All <span className="text-red-600">Projects</span>
               </h1>
-              
+
               <Link to="/projects/new" className="flex items-center gap-2 bg-red-600 text-white rounded-full px-6 py-2.5 hover:bg-red-700 transition-colors shadow-sm active:scale-95 transform duration-100">
                 <span className="text-2xl font-bold leading-none mb-0.5">+</span>
                 <span className="text-sm font-bold tracking-wide">Add New Project</span>
@@ -252,7 +252,7 @@ const AllProjects = () => {
             </div>
 
             {/* Filter Section (Compact) */}
-            <div className="bg-slate-800 rounded-2xl p-3 mb-8 flex items-center justify-between gap-4 shadow-lg">
+            <div className="bg-slate-800 rounded-xl p-3 mb-8 flex items-center justify-between gap-4 shadow-lg">
                {/* Date Filter */}
                <div className="w-60">
                  <DateRangePicker startDate={startDate} endDate={endDate} onChange={handleDateChange} />
@@ -260,14 +260,14 @@ const AllProjects = () => {
 
               {/* Search Box (Compact) */}
               <div className="w-64">
-                <div className="bg-slate-100 h-10 rounded-full px-5 flex items-center justify-between hover:bg-white transition-colors border-2 border-transparent focus-within:border-red-500/50 group">
-                  <input 
-                    type="text" 
-                    placeholder="Search..." 
+                <div className="bg-slate-100 h-10 rounded-xl px-5 flex items-center justify-between hover:bg-white transition-colors border-2 border-transparent focus-within:border-red-500/50 group">
+                  <input
+                    type="text"
+                    placeholder="Search..."
                     value={searchQuery}
                     onChange={(e) => {
                         setSearchQuery(e.target.value);
-                        setCurrentPage(1); 
+                        setCurrentPage(1);
                     }}
                     className="bg-transparent border-none outline-none text-sm w-full text-slate-700 placeholder-slate-400"
                   />
@@ -279,18 +279,18 @@ const AllProjects = () => {
             </div>
 
             {/* Data Table */}
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
               <div className="overflow-visible"> {/* overflow-visible allows dropdowns to pop out */}
                 <table className="w-full">
                   <thead className="bg-slate-50 border-b border-slate-200">
                     <tr>
                       <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Order ID</th>
                       <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Input Date</th>
-                      
+
                       {/* Service Filter Header (Multi-Select) */}
                       <th className="px-6 py-4 text-left">
-                          <MultiSelectFilter 
-                            label="Service" 
+                          <MultiSelectFilter
+                            label="Service"
                             options={masterData.layanan.map(l => l.name)}
                             selectedValues={selectedServices}
                             onChange={(vals) => { setSelectedServices(vals); setCurrentPage(1); }}
@@ -298,11 +298,11 @@ const AllProjects = () => {
                       </th>
 
                       <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Address</th>
-                      
+
                       {/* Status Filter Header (Multi-Select) */}
                       <th className="px-6 py-4 text-left">
-                          <MultiSelectFilter 
-                            label="Status" 
+                          <MultiSelectFilter
+                            label="Status"
                             options={masterData.status.map(s => s.status_name)}
                             selectedValues={selectedStatuses}
                             onChange={(vals) => { setSelectedStatuses(vals); setCurrentPage(1); }}
@@ -327,7 +327,7 @@ const AllProjects = () => {
                       </tr>
                     ) : (
                       currentItems.map((project, index) => (
-                        <tr key={index} className="hover:bg-slate-50/80 transition-colors">
+                        <tr key={index} className="hover:bg-slate-50/80 transition-colors animate-fade-in-up" style={{ animationDelay: `${index * 50}ms` }}>
                           <td className="px-6 py-4 text-sm font-bold text-slate-700">{project.order_id}</td>
                           <td className="px-6 py-4 text-sm text-slate-600">{formatDate(project.input_date)}</td>
                           <td className="px-6 py-4 text-sm text-slate-600 font-medium">{project.layanan_name || '-'}</td>
@@ -345,7 +345,7 @@ const AllProjects = () => {
                             </span>
                           </td>
                           <td className="px-6 py-4 text-right w-16">
-                            <button 
+                            <button
                               onClick={() => handleProjectClick(project.id)}
                               className="p-2 hover:bg-slate-200 rounded-full transition-colors cursor-pointer group"
                             >
@@ -366,9 +366,9 @@ const AllProjects = () => {
                 <span className="text-sm text-slate-500">
                     Showing <span className="font-bold text-slate-700">{filteredProjects.length > 0 ? indexOfFirstItem + 1 : 0}</span> to <span className="font-bold text-slate-700">{Math.min(indexOfLastItem, filteredProjects.length)}</span> of <span className="font-bold text-slate-700">{filteredProjects.length}</span> entries
                 </span>
-                
+
                 <div className="flex items-center gap-2">
-                  <button 
+                  <button
                     onClick={() => paginate(currentPage - 1)}
                     disabled={currentPage === 1}
                     className="px-3 py-1 text-sm border border-slate-300 rounded-md bg-white text-slate-600 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
@@ -384,7 +384,7 @@ const AllProjects = () => {
                             if (pageNum > totalPages) pageNum = totalPages - 4 + i;
                         }
                         return (
-                            <button 
+                            <button
                                 key={pageNum}
                                 onClick={() => paginate(pageNum)}
                                 className={`px-3 py-1 text-sm rounded-md transition-all ${currentPage === pageNum ? 'bg-red-600 text-white font-bold shadow-sm' : 'hover:bg-slate-200 text-slate-600'}`}
@@ -394,7 +394,7 @@ const AllProjects = () => {
                         );
                     })}
                   </div>
-                  <button 
+                  <button
                     onClick={() => paginate(currentPage + 1)}
                     disabled={currentPage === totalPages || totalPages === 0}
                     className="px-3 py-1 text-sm border border-slate-300 rounded-md bg-white text-slate-600 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
@@ -407,7 +407,7 @@ const AllProjects = () => {
 
             {/* Danger Zone (Full Width Thin Grey) */}
             <div className="mt-6">
-                <button 
+                <button
                     onClick={handleReset}
                     className="w-full flex items-center justify-center gap-2 py-2.5 border border-slate-200 text-slate-400 rounded-xl text-xs font-bold hover:bg-slate-100 hover:text-red-500 transition-all"
                 >

@@ -14,7 +14,7 @@ const UpdateProject = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [masterData, setMasterData] = useState({ layanan: [], status: [] });
-  
+
   // Note System
   const [notesHistory, setNotesHistory] = useState([]);
   const [oldDescription, setOldDescription] = useState('');
@@ -53,12 +53,12 @@ const UpdateProject = () => {
         ]);
 
         if (!projectRes.ok) throw new Error('Failed to fetch project');
-        
+
         const projectData = await projectRes.json();
         const masterData = await masterRes.json();
 
         setMasterData(masterData);
-        
+
         // Handle Notes: Use history from DB, or fallback to legacy description if notes table is empty
         let initialNotes = projectData.notes || [];
         if (initialNotes.length === 0 && projectData.description) {
@@ -70,7 +70,7 @@ const UpdateProject = () => {
         }
         setNotesHistory(initialNotes);
         // Save current DB status sequence
-        setLastStatusSequence(projectData.last_status_sequence || projectData.status_sequence || 1); 
+        setLastStatusSequence(projectData.last_status_sequence || projectData.status_sequence || 1);
         setHasJTHistory(projectData.has_jt_history || false); // Set from API
         setOldDescription(projectData.description || '');
 
@@ -171,13 +171,13 @@ const UpdateProject = () => {
   return (
     <div className="min-h-screen bg-slate-50 font-['Carlito'] relative">
       <Sidebar />
-      
+
       <div className="ml-64 flex flex-col min-h-screen">
         <Header />
 
         <main className="flex-1 p-8">
           <div className="max-w-7xl mx-auto">
-            
+
             {/* Page Header */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
               <div className="flex items-start gap-4">
@@ -195,13 +195,13 @@ const UpdateProject = () => {
               </div>
 
               <div className="flex gap-4">
-                <button 
+                <button
                     onClick={() => navigate(-1)}
                     className="flex items-center justify-center gap-2 h-11 px-6 rounded-xl bg-zinc-200 text-zinc-600 text-base font-bold hover:bg-zinc-300 transition-colors group"
                 >
                     Cancel
                 </button>
-                <button 
+                <button
                     onClick={handleSave}
                     disabled={saving}
                     className="flex items-center gap-2 bg-red-600 text-white h-11 px-6 rounded-xl hover:bg-red-700 transition-colors shadow-sm active:scale-95 duration-100 group"
@@ -215,12 +215,12 @@ const UpdateProject = () => {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-              
+
               {/* Left Column (60%) */}
               <div className="lg:col-span-3 space-y-6">
-                
+
                 {/* Info Card (Editable) */}
-                <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-100">
+                <div className="bg-white rounded-xl p-8 shadow-sm border border-slate-100">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12">
                      <div className="space-y-2">
                         <label className="text-slate-400 font-bold text-sm uppercase tracking-wide">Layanan</label>
@@ -249,7 +249,7 @@ const UpdateProject = () => {
                 </div>
 
                 {/* RFS Card */}
-                <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-100">
+                <div className="bg-white rounded-xl p-8 shadow-sm border border-slate-100">
                    <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12">
                       <div className="space-y-2">
                         <label className="text-slate-400 font-bold text-sm uppercase tracking-wide">Target RFS</label>
@@ -268,11 +268,11 @@ const UpdateProject = () => {
                    <div className="relative">
                       <div className="absolute left-[7px] top-2 bottom-2 w-0.5 bg-slate-200"></div>
                       <div className="space-y-8">
-                          
+
                           {/* Pending New Note Preview */}
                           {newNote && (
-                            <div className="relative pl-10 group animate-in slide-in-from-left-2 duration-200">
-                                <div className="absolute left-0 top-1.5 w-4 h-4 rounded-full border-4 border-white shadow-sm z-10 bg-red-600 ring-4 ring-red-50"></div>
+                            <div className="relative pl-10 group animate-note-enter">
+                                <div className="absolute left-0 top-1.5 w-4 h-4 rounded-full border-4 border-white shadow-sm z-10 bg-red-600 ring-4 ring-red-50 animate-success-pulse"></div>
                                 <div className="flex flex-col gap-1">
                                     <span className="text-red-600 text-sm font-bold tracking-tight">Draft Update</span>
                                     <div className="text-slate-800 text-base font-bold whitespace-pre-wrap italic">
@@ -296,7 +296,7 @@ const UpdateProject = () => {
                                 </div>
                             </div>
                           ))}
-                          
+
                           {notesHistory.length === 0 && !newNote && (
                             <div className="relative pl-10 text-slate-400 italic text-sm">No notes history available.</div>
                           )}
@@ -305,9 +305,9 @@ const UpdateProject = () => {
 
                    {/* Add New Note Button */}
                    <div className="absolute bottom-6 left-1/2 -translate-x-1/2">
-                      <button 
+                      <button
                         onClick={() => setIsNoteModalOpen(true)}
-                        className="flex items-center gap-3 bg-slate-800 text-white px-8 py-2.5 rounded-xl hover:bg-slate-900 transition-colors shadow-lg active:scale-95"
+                        className="flex items-center gap-3 bg-slate-800 text-white px-8 py-2.5 rounded-xl hover:bg-slate-900 transition-all shadow-lg animate-press hover:scale-105 hover:shadow-xl"
                       >
                         <span className="text-xl font-bold">+</span>
                         <span className="font-bold">Add New Note</span>
@@ -319,18 +319,18 @@ const UpdateProject = () => {
 
               {/* Right Column */}
               <div className="lg:col-span-2 space-y-6">
-                <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+                <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-100">
                    <h3 className="text-slate-400 font-bold text-sm uppercase tracking-wide mb-4">PIC Project</h3>
                    <input type="text" name="cp_pelanggan" value={formData.cp_pelanggan} onChange={handleChange} placeholder="Enter PIC Name" className="w-full h-12 px-4 bg-slate-100 rounded-lg border-none outline-none focus:ring-2 focus:ring-red-500 font-bold text-slate-800" />
                 </div>
-                <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+                <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-100">
                    <h3 className="text-slate-400 font-bold text-sm uppercase tracking-wide mb-4">Coordinates</h3>
-                   
+
                    {/* Map Picker */}
                    <div className="mb-6">
-                       <LocationPicker 
-                          lat={formData.latitude} 
-                          lng={formData.longitude} 
+                       <LocationPicker
+                          lat={formData.latitude}
+                          lng={formData.longitude}
                           onLocationChange={(newLat, newLng) => {
                               setFormData(prev => ({ ...prev, latitude: newLat, longitude: newLng }));
                           }}
@@ -350,7 +350,7 @@ const UpdateProject = () => {
                    {(() => {
                        const currentStatusObj = masterData.status.find(s => s.id === parseInt(formData.status_id));
                        return (
-                           <MilestoneTimeline 
+                           <MilestoneTimeline
                               statusName={currentStatusObj?.status_name}
                               statusSequence={currentStatusObj?.sequence_order}
                               lastStatusSequence={lastStatusSequence}
@@ -358,10 +358,10 @@ const UpdateProject = () => {
                            />
                        );
                                                          })()}
-                                      
+
                                                          {/* Edit Status Button (Relative Position) */}
                                                          <div className="mt-8 px-6">
-                                                            <button 
+                                                            <button
                                                               type="button"
                                                               onClick={() => setIsMilestoneModalOpen(true)}
                                                               className="w-full flex items-center justify-center gap-3 bg-slate-800 text-white py-3 rounded-xl hover:bg-slate-900 transition-colors shadow-lg"
@@ -372,45 +372,45 @@ const UpdateProject = () => {
                                                               <span className="font-bold">Edit Status</span>
                                                             </button>
                                                          </div>
-                                                      </div>                   
+                                                      </div>
                                  </div>
                                </div>
                              </div>
                            </main>
                          </div>
-                   
+
                          {/* New Note Modal */}
                          {isNoteModalOpen && (
-                           <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-                              <div className="bg-white rounded-3xl w-full max-w-lg shadow-2xl p-8 relative animate-in zoom-in-95 duration-200">
+                           <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-modal-backdrop">
+                              <div className="bg-white rounded-xl w-full max-w-lg shadow-2xl p-8 relative animate-modal-content">
                                  <h2 className="text-3xl font-bold text-slate-800 mb-6">New Note</h2>
-                                 <textarea 
+                                 <textarea
                                    value={tempNote}
                                    onChange={(e) => setTempNote(e.target.value)}
-                                   className="w-full h-40 bg-slate-50 rounded-xl p-4 text-slate-800 placeholder-slate-400 text-lg border border-slate-200 focus:border-red-600 focus:ring-1 focus:ring-red-600 outline-none resize-none mb-8"
+                                   className="w-full h-40 bg-slate-50 rounded-xl p-4 text-slate-800 placeholder-slate-400 text-lg border border-slate-200 focus:border-red-600 focus:ring-1 focus:ring-red-600 outline-none resize-none mb-8 transition-all"
                                    placeholder="Write your update here ..."
                                  ></textarea>
                                  <div className="flex gap-4">
-                                   <button onClick={() => { setIsNoteModalOpen(false); setTempNote(''); }} className="flex-1 h-12 rounded-xl border-2 border-slate-300 text-slate-500 font-bold text-xl hover:bg-slate-50 transition-colors">Cancel</button>
-                                   <button onClick={handleAddNote} className="flex-1 flex items-center justify-center gap-3 h-12 rounded-xl bg-red-600 text-white font-bold text-xl hover:bg-red-700 transition-colors shadow-lg group">Save Note</button>
+                                   <button onClick={() => { setIsNoteModalOpen(false); setTempNote(''); }} className="flex-1 h-12 rounded-xl border-2 border-slate-300 text-slate-500 font-bold text-xl hover:bg-slate-50 transition-all animate-press">Cancel</button>
+                                   <button onClick={handleAddNote} className="flex-1 flex items-center justify-center gap-3 h-12 rounded-xl bg-red-600 text-white font-bold text-xl hover:bg-red-700 transition-all shadow-lg animate-press hover:scale-105">Save Note</button>
                                  </div>
                               </div>
                            </div>
                          )}
-                   
+
                          {/* Edit Status Modal */}
                          {isMilestoneModalOpen && (
-                           <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-                              <div className="bg-white rounded-3xl w-full max-w-md shadow-2xl p-8 relative animate-in zoom-in-95 duration-200">
+                           <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-modal-backdrop">
+                              <div className="bg-white rounded-xl w-full max-w-md shadow-2xl p-8 relative animate-modal-content">
                                  <h2 className="text-3xl font-bold text-slate-800 mb-6">Update Status</h2>
-                                 
+
                                  <div className="space-y-4 mb-8">
                                      <label className="text-slate-500 font-bold text-lg">Select New Status</label>
-                                     <select 
+                                     <select
                                        name="status_id"
                                        value={formData.status_id}
                                        onChange={handleChange}
-                                       className="w-full h-14 px-4 bg-slate-100 rounded-xl border-none outline-none focus:ring-2 focus:ring-red-500 font-bold text-slate-800 text-lg"
+                                       className="w-full h-14 px-4 bg-slate-100 rounded-xl border-none outline-none focus:ring-2 focus:ring-red-500 font-bold text-slate-800 text-lg transition-all"
                                      >
                                          <option value="">Select Status</option>
                                          {masterData.status.map(s => (
@@ -418,13 +418,13 @@ const UpdateProject = () => {
                                          ))}
                                      </select>
                                  </div>
-                   
+
                                  <div className="flex gap-4">
-                                   <button 
-                                       onClick={() => setIsMilestoneModalOpen(false)} 
-                                       className="flex-1 h-12 rounded-xl border-2 border-slate-300 text-slate-500 font-bold text-xl hover:bg-slate-50 transition-colors"
+                                   <button
+                                       onClick={() => setIsMilestoneModalOpen(false)}
+                                       className="flex-1 h-12 rounded-xl bg-green-500 text-white font-bold text-xl hover:bg-green-600 transition-all shadow-lg animate-press hover:scale-105"
                                    >
-                                       Done
+                                       ✓ Done
                                    </button>
                                  </div>
                               </div>

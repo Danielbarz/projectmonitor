@@ -7,20 +7,20 @@ const ManageRoles = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  
+
   // Modals
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   // Form State
-  const [currentUser, setCurrentUser] = useState(null); 
+  const [currentUser, setCurrentUser] = useState(null);
   const [formData, setFormData] = useState({
     username: '',
     email: '',
     password: '',
     confirmPassword: '',
-    role_id: '3' 
+    role_id: '3'
   });
 
   const roles = [
@@ -48,7 +48,7 @@ const ManageRoles = () => {
 
   // Filter Logic
   const filteredUsers = useMemo(() => {
-      return users.filter(u => 
+      return users.filter(u =>
         u.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         u.name?.toLowerCase().includes(searchQuery.toLowerCase())
       );
@@ -88,7 +88,7 @@ const ManageRoles = () => {
                 role: parseInt(formData.role_id)
             })
         });
-        
+
         if (response.ok) {
             alert('User added successfully');
             setIsAddModalOpen(false);
@@ -106,12 +106,12 @@ const ManageRoles = () => {
   // Edit User (Role & Password)
   const openEditModal = (user) => {
       setCurrentUser(user);
-      setFormData({ 
-          username: user.name, 
-          email: user.email, 
-          password: '', 
-          confirmPassword: '', 
-          role_id: user.role_id 
+      setFormData({
+          username: user.name,
+          email: user.email,
+          password: '',
+          confirmPassword: '',
+          role_id: user.role_id
       });
       setIsEditModalOpen(true);
   };
@@ -127,7 +127,7 @@ const ManageRoles = () => {
           const response = await fetch(`http://localhost:5000/api/users/${currentUser.id}`, {
               method: 'PUT', // Changed route to general update
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ 
+              body: JSON.stringify({
                   role_id: formData.role_id,
                   password: formData.password // Optional
               })
@@ -170,20 +170,20 @@ const ManageRoles = () => {
   return (
     <div className="min-h-screen bg-slate-50 font-['Carlito'] relative">
       <Sidebar />
-      
+
       <div className="ml-64 flex flex-col min-h-screen">
         <Header />
 
         <main className="flex-1 p-8">
           <div className="max-w-7xl mx-auto">
-            
+
             {/* Page Header */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
               <h1 className="text-3xl font-bold text-slate-800">
                 Manage <span className="text-red-600">Roles</span>
               </h1>
-              
-              <button 
+
+              <button
                 onClick={() => { resetForm(); setIsAddModalOpen(true); }}
                 className="flex items-center gap-2 bg-red-600 text-white px-6 py-2.5 rounded-full hover:bg-red-700 transition-colors shadow-sm active:scale-95 transform duration-100"
               >
@@ -193,13 +193,13 @@ const ManageRoles = () => {
             </div>
 
             {/* Main Content Card */}
-            <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200 relative overflow-hidden min-h-[600px]">
-               
+            <div className="bg-white rounded-xl p-8 shadow-sm border border-slate-200 relative overflow-hidden min-h-[600px]">
+
                {/* Controls: Search */}
                <div className="flex justify-between items-center mb-8">
-                  <div className="relative w-80 h-10 bg-slate-100 rounded-full flex items-center px-5 border-2 border-transparent focus-within:border-red-500/50 group transition-colors hover:bg-white">
-                     <input 
-                        type="text" 
+                  <div className="relative w-80 h-10 bg-slate-100 rounded-xl flex items-center px-5 border-2 border-transparent focus-within:border-red-500/50 group transition-colors hover:bg-white">
+                     <input
+                        type="text"
                         placeholder="Search Email or Name"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
@@ -212,7 +212,7 @@ const ManageRoles = () => {
                </div>
 
                {/* Table Container */}
-               <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+               <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
                   <div className="bg-slate-50 h-14 flex items-center px-8 border-b border-slate-200">
                      <div className="w-1/4 text-slate-500 text-xs font-bold uppercase tracking-wider">Name</div>
                      <div className="w-1/3 text-center text-slate-500 text-xs font-bold uppercase tracking-wider">Email</div>
@@ -239,7 +239,7 @@ const ManageRoles = () => {
                               </span>
                            </div>
                            <div className="w-1/6 flex justify-center gap-3">
-                              <button 
+                              <button
                                 onClick={() => openEditModal(user)}
                                 className="p-2 hover:bg-slate-200 rounded-full transition-colors group"
                                 title="Edit User"
@@ -248,7 +248,7 @@ const ManageRoles = () => {
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                 </svg>
                               </button>
-                              <button 
+                              <button
                                 onClick={() => { setCurrentUser(user); setIsDeleteModalOpen(true); }}
                                 className="p-2 hover:bg-red-50 rounded-full transition-colors group"
                                 title="Delete User"
@@ -270,15 +270,15 @@ const ManageRoles = () => {
       {/* Edit User Modal */}
       {isEditModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-           <div className="bg-white rounded-3xl w-full max-w-2xl shadow-2xl p-8 relative animate-in zoom-in-95 duration-200">
+           <div className="bg-white rounded-xl w-full max-w-2xl shadow-2xl p-8 relative animate-in zoom-in-95 duration-200">
               <h2 className="text-3xl font-bold text-slate-800 mb-2">Edit User</h2>
               <p className="text-slate-500 mb-8">Update details for <span className="font-bold text-slate-700">{currentUser?.name}</span></p>
-              
+
               <div className="flex flex-col gap-6">
                   <div className="flex flex-col gap-2">
                       <label className="text-slate-800 text-lg font-bold font-['Carlito']">Role</label>
                       <div className="relative">
-                          <select 
+                          <select
                             name="role_id"
                             value={formData.role_id}
                             onChange={handleInputChange}
@@ -298,10 +298,10 @@ const ManageRoles = () => {
                       <p className="text-slate-800 text-lg font-bold font-['Carlito'] mb-6">Change Password (Optional)</p>
                       <div className="flex gap-6">
                           <div className="flex-1">
-                              <Input 
-                                label="New Password" 
-                                type="password" 
-                                placeholder="••••••••" 
+                              <Input
+                                label="New Password"
+                                type="password"
+                                placeholder="••••••••"
                                 name="password"
                                 value={formData.password}
                                 onChange={handleInputChange}
@@ -309,10 +309,10 @@ const ManageRoles = () => {
                               />
                           </div>
                           <div className="flex-1">
-                              <Input 
-                                label="Confirm New Password" 
-                                type="password" 
-                                placeholder="••••••••" 
+                              <Input
+                                label="Confirm New Password"
+                                type="password"
+                                placeholder="••••••••"
                                 name="confirmPassword"
                                 value={formData.confirmPassword}
                                 onChange={handleInputChange}
@@ -322,15 +322,15 @@ const ManageRoles = () => {
                       </div>
                   </div>
               </div>
-              
+
               <div className="flex gap-4 mt-8 pt-6">
-                <button 
+                <button
                   onClick={() => setIsEditModalOpen(false)}
                   className="flex-1 h-12 rounded-xl bg-gray-200 text-slate-600 font-bold text-lg hover:bg-gray-300 transition-colors"
                 >
                   Cancel
                 </button>
-                <button 
+                <button
                   onClick={handleUpdateUser}
                   className="flex-1 h-12 rounded-xl bg-red-600 text-white font-bold text-lg hover:bg-red-700 transition-colors shadow-lg"
                 >
@@ -344,7 +344,7 @@ const ManageRoles = () => {
       {/* Delete User Modal */}
       {isDeleteModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-           <div className="bg-white rounded-3xl w-full max-w-sm shadow-2xl p-8 relative animate-in zoom-in-95 duration-200 text-center">
+           <div className="bg-white rounded-xl w-full max-w-sm shadow-2xl p-8 relative animate-in zoom-in-95 duration-200 text-center">
               {/* ... same delete modal content ... */}
               <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -353,15 +353,15 @@ const ManageRoles = () => {
               </div>
               <h2 className="text-2xl font-bold text-slate-800 mb-2">Delete User?</h2>
               <p className="text-slate-500 mb-8">Are you sure you want to delete <span className="font-bold text-slate-700">{currentUser?.name}</span>? This action cannot be undone.</p>
-              
+
               <div className="flex gap-4">
-                <button 
+                <button
                   onClick={() => setIsDeleteModalOpen(false)}
                   className="flex-1 h-12 rounded-xl bg-gray-200 text-slate-600 font-bold text-lg hover:bg-gray-300 transition-colors"
                 >
                   Cancel
                 </button>
-                <button 
+                <button
                   onClick={handleDeleteUser}
                   className="flex-1 h-12 rounded-xl bg-red-600 text-white font-bold text-lg hover:bg-red-700 transition-colors shadow-lg"
                 >
@@ -375,16 +375,16 @@ const ManageRoles = () => {
       {/* Add User Modal */}
       {isAddModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-           <div className="bg-white rounded-3xl w-full max-w-2xl shadow-2xl p-8 relative animate-in zoom-in-95 duration-200">
+           <div className="bg-white rounded-xl w-full max-w-2xl shadow-2xl p-8 relative animate-in zoom-in-95 duration-200">
               <h2 className="text-3xl font-bold text-slate-800 mb-8">Add User</h2>
-              
+
               <div className="flex flex-col gap-6">
                   {/* ... same add user form ... */}
                   <div className="flex gap-6">
                       <div className="flex-1">
-                          <Input 
-                            label="Username" 
-                            placeholder="Enter username" 
+                          <Input
+                            label="Username"
+                            placeholder="Enter username"
                             name="username"
                             value={formData.username}
                             onChange={handleInputChange}
@@ -394,7 +394,7 @@ const ManageRoles = () => {
                           <div className="flex flex-col gap-2">
                               <label className="text-slate-800 text-lg font-bold font-['Carlito']">Role</label>
                               <div className="relative">
-                                  <select 
+                                  <select
                                     name="role_id"
                                     value={formData.role_id}
                                     onChange={handleInputChange}
@@ -412,21 +412,21 @@ const ManageRoles = () => {
                       </div>
                   </div>
 
-                  <Input 
-                    label="Email" 
-                    type="email" 
-                    placeholder="email@telkom.co.id" 
+                  <Input
+                    label="Email"
+                    type="email"
+                    placeholder="email@telkom.co.id"
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
                   />
-                  
+
                   <div className="flex gap-6">
                       <div className="flex-1">
-                          <Input 
-                            label="Password" 
-                            type="password" 
-                            placeholder="••••••••" 
+                          <Input
+                            label="Password"
+                            type="password"
+                            placeholder="••••••••"
                             name="password"
                             value={formData.password}
                             onChange={handleInputChange}
@@ -434,10 +434,10 @@ const ManageRoles = () => {
                           />
                       </div>
                       <div className="flex-1">
-                          <Input 
-                            label="Confirm Password" 
-                            type="password" 
-                            placeholder="••••••••" 
+                          <Input
+                            label="Confirm Password"
+                            type="password"
+                            placeholder="••••••••"
                             name="confirmPassword"
                             value={formData.confirmPassword}
                             onChange={handleInputChange}
@@ -446,15 +446,15 @@ const ManageRoles = () => {
                       </div>
                   </div>
               </div>
-              
+
               <div className="flex gap-4 mt-8 justify-end border-t border-slate-100 pt-6">
-                <button 
+                <button
                   onClick={() => setIsAddModalOpen(false)}
                   className="px-6 py-2.5 rounded-xl bg-gray-500 text-white font-bold text-lg hover:bg-gray-600 transition-colors"
                 >
                   Cancel
                 </button>
-                <button 
+                <button
                   onClick={handleAddUser}
                   className="flex items-center gap-2 px-8 py-2.5 rounded-xl bg-red-600 text-white font-bold text-lg hover:bg-red-700 transition-colors shadow-lg shadow-red-600/20"
                 >

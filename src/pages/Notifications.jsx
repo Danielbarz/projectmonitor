@@ -104,13 +104,13 @@ const Notifications = () => {
   return (
     <div className="min-h-screen bg-slate-50 font-['Carlito']">
       <Sidebar />
-      
+
       <div className="ml-64 flex flex-col min-h-screen">
         <Header />
 
         <main className="flex-1 p-8">
           <div className="max-w-5xl mx-auto">
-            
+
             {/* Page Header */}
             <div className="flex items-center gap-4 mb-10">
               <h1 className="text-3xl font-bold text-slate-800">Notifications</h1>
