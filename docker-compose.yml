@@ -1,0 +1,53 @@
+# Docker Compose - Project Monitor
+# Backend runs on port 5001, connects to shared PostgreSQL
+
+version: '3.8'
+
+services:
+  # Frontend (Nginx + Vite Build)
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: projectmonitor-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - projectmonitor-network
+      - shared-network  # Connect to shared network for cross-container communication
+    restart: unless-stopped
+
+  # Backend (Express API)
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: projectmonitor-backend
+    ports:
+      - "5001:5001"
+    environment:
+      - PORT=5001
+      - DB_USER=${DB_USER:-postgres}
+      - DB_PASSWORD=${DB_PASSWORD:-postgres}
+      - DB_HOST=${DB_HOST:-postgres}  # Use shared postgres container name
+      - DB_PORT=${DB_PORT:-5432}
+      - DB_NAME=${DB_NAME:-project_management}
+      - JWT_SECRET=${JWT_SECRET:-rahasia_negara_api_123}
+    networks:
+      - projectmonitor-network
+      - shared-network  # Connect to shared postgres network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:5001/api/master"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  projectmonitor-network:
+    driver: bridge
+  shared-network:
+    external: true  # Assumes shared network already exists from other containers
+    name: ${SHARED_NETWORK_NAME:-shared-network}
