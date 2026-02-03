@@ -119,7 +119,7 @@ const Dashboard = () => {
                        value: stats.total_projects,
                        color: 'text-amber-700',
                        border: 'border-amber-500',
-                       grad: 'from-white to-amber-100',
+                       grad: 'from-white/80 to-amber-100/60',
                        icon: (
                          <svg className="w-12 h-12 text-amber-500" viewBox="0 0 24 24" fill="currentColor">
                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
@@ -131,7 +131,7 @@ const Dashboard = () => {
                        value: stats.ogp,
                        color: 'text-teal-700',
                        border: 'border-teal-500',
-                       grad: 'from-white to-teal-100',
+                       grad: 'from-white/80 to-teal-100/60',
                        icon: (
                          <svg className="w-12 h-12 text-teal-500" viewBox="0 0 24 24" fill="currentColor">
                            <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm4.2 14.2L11 13V7h1.5v5.2l4.5 2.7-.8 1.3z"/>
@@ -143,7 +143,7 @@ const Dashboard = () => {
                        value: stats.jt,
                        color: 'text-red-700',
                        border: 'border-red-600',
-                       grad: 'from-white to-red-100',
+                       grad: 'from-white/80 to-red-100/60',
                        icon: (
                          <svg className="w-12 h-12 text-red-600" viewBox="0 0 24 24" fill="currentColor">
                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>
@@ -155,7 +155,7 @@ const Dashboard = () => {
                        value: stats.completed,
                        color: 'text-cyan-700',
                        border: 'border-cyan-500',
-                       grad: 'from-white to-cyan-100',
+                       grad: 'from-white/80 to-cyan-100/60',
                        icon: (
                          <svg className="w-12 h-12 text-cyan-500" viewBox="0 0 24 24" fill="currentColor">
                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
@@ -163,7 +163,7 @@ const Dashboard = () => {
                        )
                      }
                    ].map((stat, idx) => (
-                     <div key={idx} className={`bg-gradient-to-r ${stat.grad} rounded-xl p-6 shadow-sm border-l-4 ${stat.border} flex items-center justify-between hover:shadow-md transition-all group`}>
+                     <div key={idx} className={`bg-gradient-to-r ${stat.grad} backdrop-blur-xl rounded-xl p-6 shadow-lg border border-white/50 border-l-4 ${stat.border} flex items-center justify-between hover:shadow-xl hover:bg-white/90 transition-all duration-300 group`}>
                        <div>
                          <p className="text-slate-600 text-xs font-bold uppercase mb-1 opacity-60">{stat.label}</p>
                          <p className={`text-4xl font-bold ${stat.color}`}>{stat.value}</p>
@@ -179,7 +179,7 @@ const Dashboard = () => {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
 
                   {/* Chart 1: Project Status */}
-                  <div className="bg-white rounded-xl p-6 shadow-sm flex flex-col items-center">
+                  <div className="bg-white/70 backdrop-blur-xl rounded-xl p-6 shadow-lg border border-white/50 flex flex-col items-center hover:bg-white/80 transition-all duration-300">
                     <h3 className="text-lg font-bold text-slate-800 mb-6 text-center uppercase tracking-wider text-sm opacity-70">Project Status</h3>
                     <div className="flex flex-col items-center w-full">
                         <div className="relative w-48 h-48">
@@ -210,7 +210,7 @@ const Dashboard = () => {
                   </div>
 
                   {/* Chart 2: Target RFS Achievement */}
-                  <div className="bg-white rounded-xl p-6 shadow-sm flex flex-col items-center">
+                  <div className="bg-white/70 backdrop-blur-xl rounded-xl p-6 shadow-lg border border-white/50 flex flex-col items-center hover:bg-white/80 transition-all duration-300">
                     <h3 className="text-lg font-bold text-slate-800 mb-6 text-center uppercase tracking-wider text-sm opacity-70">RFS Achievement</h3>
                     <div className="flex flex-col items-center w-full">
                         <div className="relative w-48 h-48">
@@ -237,7 +237,7 @@ const Dashboard = () => {
                   </div>
 
                   {/* Chart 3: Overall Achievement */}
-                  <div className="bg-white rounded-xl p-6 shadow-sm flex flex-col items-center">
+                  <div className="bg-white/70 backdrop-blur-xl rounded-xl p-6 shadow-lg border border-white/50 flex flex-col items-center hover:bg-white/80 transition-all duration-300">
                     <h3 className="text-lg font-bold text-slate-800 mb-6 text-center uppercase tracking-wider text-sm opacity-70">Overall Progress</h3>
                     <div className="flex flex-col items-center w-full">
                         <div className="relative w-48 h-48">

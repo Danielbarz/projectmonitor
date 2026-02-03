@@ -56,13 +56,13 @@ const ProjectDetail = () => {
   return (
     <div className="min-h-screen bg-slate-50 font-['Carlito']">
       <Sidebar />
-      
+
       <div className="ml-64 flex flex-col min-h-screen">
         <Header />
 
         <main className="flex-1 p-8">
           <div className="max-w-7xl mx-auto">
-            
+
             {/* Page Header */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
               <div className="flex items-start gap-4">
@@ -77,7 +77,7 @@ const ProjectDetail = () => {
                     </h1>
                     <div className="flex items-center gap-3 mt-1">
                       <span className={`px-3 py-1 rounded-full text-xs font-bold border ${
-                          project.status_name === 'Completed' ? 'bg-green-100 text-green-700 border-green-200' : 
+                          project.status_name === 'Completed' ? 'bg-green-100 text-green-700 border-green-200' :
                           'bg-cyan-100 text-cyan-700 border-cyan-200'
                       }`}>
                         {project.status_name}
@@ -86,7 +86,7 @@ const ProjectDetail = () => {
                  </div>
               </div>
 
-              <button 
+              <button
                 onClick={() => navigate(`/projects/${id}/edit`)}
                 className="flex items-center gap-3 bg-slate-800 text-white px-6 py-3 rounded-xl hover:bg-slate-900 transition-colors shadow-lg shadow-slate-800/20 group"
               >
@@ -98,12 +98,12 @@ const ProjectDetail = () => {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-              
+
               {/* Left Column (60%) */}
               <div className="lg:col-span-3 space-y-6">
-                
+
                 {/* Project Info Card */}
-                <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-100">
+                <div className="bg-white rounded-xl p-8 shadow-sm border border-slate-100">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12">
                      <div className="space-y-1">
                         <label className="text-slate-400 font-bold text-sm uppercase tracking-wide">Layanan</label>
@@ -131,7 +131,7 @@ const ProjectDetail = () => {
                 </div>
 
                 {/* RFS Card */}
-                <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-100">
+                <div className="bg-white rounded-xl p-8 shadow-sm border border-slate-100">
                    <div className="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-12">
                       <div className="space-y-1">
                           <label className="text-slate-400 font-bold text-sm uppercase tracking-wide">Target RFS</label>
@@ -147,18 +147,18 @@ const ProjectDetail = () => {
                 </div>
 
                 {/* Activity Log / Notes (Full History) */}
-                <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-100 relative">
+                <div className="bg-white rounded-xl p-8 shadow-sm border border-slate-100 relative">
                    <h3 className="text-slate-400 font-bold text-lg uppercase tracking-wide mb-8">Activity Log / Notes</h3>
                    <div className="relative">
                       {/* Vertical Line */}
                       <div className="absolute left-[7px] top-2 bottom-2 w-0.5 bg-slate-200"></div>
-                      
+
                       <div className="space-y-8">
                           {(project.notes && project.notes.length > 0 ? project.notes : (project.description ? [{ created_at: null, keterangan: project.description }] : [])).map((note, idx) => (
                               <div key={note.id || idx} className="relative pl-10 group">
                                  {/* Dot */}
                                  <div className={`absolute left-0 top-1.5 w-4 h-4 rounded-full border-4 border-white shadow-sm z-10 ${idx === 0 ? 'bg-red-600 ring-4 ring-red-50' : 'bg-slate-400 ring-4 ring-slate-50 opacity-80'}`}></div>
-                                 
+
                                  <div className="flex flex-col gap-2">
                                     <span className="text-slate-400 text-sm font-medium tracking-tight">
                                         {note.created_at ? new Date(note.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute:'2-digit' }) : 'Latest Update'}
@@ -169,7 +169,7 @@ const ProjectDetail = () => {
                                  </div>
                               </div>
                           ))}
-                          
+
                           {(!project.notes || project.notes.length === 0) && !project.description && (
                               <div className="relative pl-10 text-slate-400 italic text-sm">No notes available.</div>
                           )}
@@ -181,9 +181,9 @@ const ProjectDetail = () => {
 
               {/* Right Column (40%) */}
               <div className="lg:col-span-2 flex flex-col gap-6 h-full">
-                
+
                 {/* PIC Card */}
-                <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex items-center gap-4">
+                <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-100 flex items-center gap-4">
                    <div className="w-16 h-16 bg-slate-200 rounded-full flex-shrink-0 flex items-center justify-center text-slate-400 font-bold text-xl uppercase">
                       {project.cp_pelanggan ? project.cp_pelanggan.substring(0, 2) : 'NA'}
                    </div>
@@ -194,7 +194,7 @@ const ProjectDetail = () => {
                 </div>
 
                 {/* Coordinates Card with Map */}
-                <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col gap-6">
+                <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-100 flex flex-col gap-6">
                    <div>
                        <h3 className="text-slate-400 font-bold text-sm uppercase tracking-wide mb-4">Coordinates</h3>
                        <div className="grid grid-cols-2 gap-4">
@@ -212,7 +212,7 @@ const ProjectDetail = () => {
                    {/* Map Inside Card */}
                    {project.latitude && project.longitude && (
                         <div className="rounded-xl overflow-hidden border border-slate-200">
-                            <ProjectMap 
+                            <ProjectMap
                                 center={[project.latitude, project.longitude]}
                                 zoom={13}
                                 height="200px"
@@ -229,9 +229,9 @@ const ProjectDetail = () => {
                 </div>
 
                 {/* Project Milestone (Dynamic Component) */}
-                <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 relative flex-1">
+                <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-100 relative flex-1">
                    <h3 className="text-slate-400 font-bold text-sm uppercase tracking-wide mb-8">Project Milestone</h3>
-                   <MilestoneTimeline 
+                   <MilestoneTimeline
                       statusName={project.status_name}
                       statusSequence={project.status_sequence}
                       lastStatusSequence={project.last_status_sequence}

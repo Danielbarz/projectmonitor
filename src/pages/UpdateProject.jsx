@@ -8,11 +8,11 @@ import { useParams, useNavigate } from 'react-router-dom';
 const UpdateProject = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  
+
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [masterData, setMasterData] = useState({ layanan: [], status: [] });
-  
+
   // Note System
   const [notesHistory, setNotesHistory] = useState([]);
   const [oldDescription, setOldDescription] = useState('');
@@ -48,12 +48,12 @@ const UpdateProject = () => {
         ]);
 
         if (!projectRes.ok) throw new Error('Failed to fetch project');
-        
+
         const projectData = await projectRes.json();
         const masterData = await masterRes.json();
 
         setMasterData(masterData);
-        
+
         // Handle Notes: Use history from DB, or fallback to legacy description if notes table is empty
         let initialNotes = projectData.notes || [];
         if (initialNotes.length === 0 && projectData.description) {
@@ -65,7 +65,7 @@ const UpdateProject = () => {
         }
         setNotesHistory(initialNotes);
         // Save current DB status sequence
-        setLastStatusSequence(projectData.last_status_sequence || projectData.status_sequence || 1); 
+        setLastStatusSequence(projectData.last_status_sequence || projectData.status_sequence || 1);
         setHasJTHistory(projectData.has_jt_history || false); // Set from API
         setOldDescription(projectData.description || '');
 
@@ -163,13 +163,13 @@ const UpdateProject = () => {
   return (
     <div className="min-h-screen bg-slate-50 font-['Carlito'] relative">
       <Sidebar />
-      
+
       <div className="ml-64 flex flex-col min-h-screen">
         <Header />
 
         <main className="flex-1 p-8">
           <div className="max-w-7xl mx-auto">
-            
+
             {/* Page Header */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
               <div className="flex items-start gap-4">
@@ -187,16 +187,16 @@ const UpdateProject = () => {
               </div>
 
               <div className="flex gap-4">
-                <button 
+                <button
                     onClick={() => navigate(-1)}
-                    className="flex items-center justify-center gap-3 h-14 px-8 rounded-2xl bg-zinc-300 text-white text-xl font-bold hover:bg-zinc-400 transition-colors group"
+                    className="flex items-center justify-center gap-3 h-14 px-8 rounded-xl bg-zinc-300 text-white text-xl font-bold hover:bg-zinc-400 transition-colors group"
                 >
                     Cancel
                 </button>
-                <button 
+                <button
                     onClick={handleSave}
                     disabled={saving}
-                    className="flex items-center gap-3 bg-red-600 text-white px-8 h-14 rounded-2xl hover:bg-red-700 transition-colors shadow-lg shadow-red-600/20 group"
+                    className="flex items-center gap-3 bg-red-600 text-white px-8 h-14 rounded-xl hover:bg-red-700 transition-colors shadow-lg shadow-red-600/20 group"
                 >
                     <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
@@ -207,12 +207,12 @@ const UpdateProject = () => {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-              
+
               {/* Left Column (60%) */}
               <div className="lg:col-span-3 space-y-6">
-                
+
                 {/* Info Card (Editable) */}
-                <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-100">
+                <div className="bg-white rounded-xl p-8 shadow-sm border border-slate-100">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12">
                      <div className="space-y-2">
                         <label className="text-slate-400 font-bold text-sm uppercase tracking-wide">Layanan</label>
@@ -241,7 +241,7 @@ const UpdateProject = () => {
                 </div>
 
                 {/* RFS Card */}
-                <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-100">
+                <div className="bg-white rounded-xl p-8 shadow-sm border border-slate-100">
                    <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12">
                       <div className="space-y-2">
                         <label className="text-slate-400 font-bold text-sm uppercase tracking-wide">Target RFS</label>
@@ -255,12 +255,12 @@ const UpdateProject = () => {
                 </div>
 
                 {/* Activity Log / Notes (Updated) */}
-                <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-100 relative pb-20">
+                <div className="bg-white rounded-xl p-8 shadow-sm border border-slate-100 relative pb-20">
                    <h3 className="text-slate-400 font-bold text-lg uppercase tracking-wide mb-8">Activity Log / Notes</h3>
                    <div className="relative">
                       <div className="absolute left-[7px] top-2 bottom-2 w-0.5 bg-slate-200"></div>
                       <div className="space-y-8">
-                          
+
                           {/* Pending New Note Preview */}
                           {newNote && (
                             <div className="relative pl-10 group animate-in slide-in-from-left-2 duration-200">
@@ -288,7 +288,7 @@ const UpdateProject = () => {
                                 </div>
                             </div>
                           ))}
-                          
+
                           {notesHistory.length === 0 && !newNote && (
                             <div className="relative pl-10 text-slate-400 italic text-sm">No notes history available.</div>
                           )}
@@ -297,7 +297,7 @@ const UpdateProject = () => {
 
                    {/* Add New Note Button */}
                    <div className="absolute bottom-6 left-1/2 -translate-x-1/2">
-                      <button 
+                      <button
                         onClick={() => setIsNoteModalOpen(true)}
                         className="flex items-center gap-3 bg-slate-800 text-white px-8 py-2.5 rounded-xl hover:bg-slate-900 transition-colors shadow-lg active:scale-95"
                       >
@@ -311,18 +311,18 @@ const UpdateProject = () => {
 
               {/* Right Column */}
               <div className="lg:col-span-2 space-y-6">
-                <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+                <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-100">
                    <h3 className="text-slate-400 font-bold text-sm uppercase tracking-wide mb-4">PIC Project</h3>
                    <input type="text" name="cp_pelanggan" value={formData.cp_pelanggan} onChange={handleChange} placeholder="Enter PIC Name" className="w-full h-12 px-4 bg-slate-100 rounded-lg border-none outline-none focus:ring-2 focus:ring-red-500 font-bold text-slate-800" />
                 </div>
-                <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+                <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-100">
                    <h3 className="text-slate-400 font-bold text-sm uppercase tracking-wide mb-4">Coordinates</h3>
-                   
+
                    {/* Map Picker */}
                    <div className="mb-6">
-                       <LocationPicker 
-                          lat={formData.latitude} 
-                          lng={formData.longitude} 
+                       <LocationPicker
+                          lat={formData.latitude}
+                          lng={formData.longitude}
                           onLocationChange={(newLat, newLng) => {
                               setFormData(prev => ({ ...prev, latitude: newLat, longitude: newLng }));
                           }}
@@ -336,13 +336,13 @@ const UpdateProject = () => {
                 </div>
 
                 {/* Project Milestone (Preview) */}
-                <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 relative flex-1">
+                <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-100 relative flex-1">
                    <h3 className="text-slate-400 font-bold text-sm uppercase tracking-wide mb-8">Project Milestone</h3>
-                   
+
                    {(() => {
                        const currentStatusObj = masterData.status.find(s => s.id === parseInt(formData.status_id));
                        return (
-                           <MilestoneTimeline 
+                           <MilestoneTimeline
                               statusName={currentStatusObj?.status_name}
                               statusSequence={currentStatusObj?.sequence_order}
                               lastStatusSequence={lastStatusSequence}
@@ -350,10 +350,10 @@ const UpdateProject = () => {
                            />
                        );
                                                          })()}
-                                      
+
                                                          {/* Edit Status Button (Relative Position) */}
                                                          <div className="mt-8 px-6">
-                                                            <button 
+                                                            <button
                                                               type="button"
                                                               onClick={() => setIsMilestoneModalOpen(true)}
                                                               className="w-full flex items-center justify-center gap-3 bg-slate-800 text-white py-3 rounded-xl hover:bg-slate-900 transition-colors shadow-lg"
@@ -364,19 +364,19 @@ const UpdateProject = () => {
                                                               <span className="font-bold">Edit Status</span>
                                                             </button>
                                                          </div>
-                                                      </div>                   
+                                                      </div>
                                  </div>
                                </div>
                              </div>
                            </main>
                          </div>
-                   
+
                          {/* New Note Modal */}
                          {isNoteModalOpen && (
                            <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-                              <div className="bg-white rounded-3xl w-full max-w-lg shadow-2xl p-8 relative animate-in zoom-in-95 duration-200">
+                              <div className="bg-white rounded-xl w-full max-w-lg shadow-2xl p-8 relative animate-in zoom-in-95 duration-200">
                                  <h2 className="text-3xl font-bold text-slate-800 mb-6">New Note</h2>
-                                 <textarea 
+                                 <textarea
                                    value={tempNote}
                                    onChange={(e) => setTempNote(e.target.value)}
                                    className="w-full h-40 bg-slate-50 rounded-xl p-4 text-slate-800 placeholder-slate-400 text-lg border border-slate-200 focus:border-red-600 focus:ring-1 focus:ring-red-600 outline-none resize-none mb-8"
@@ -389,16 +389,16 @@ const UpdateProject = () => {
                               </div>
                            </div>
                          )}
-                   
+
                          {/* Edit Status Modal */}
                          {isMilestoneModalOpen && (
                            <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-                              <div className="bg-white rounded-3xl w-full max-w-md shadow-2xl p-8 relative animate-in zoom-in-95 duration-200">
+                              <div className="bg-white rounded-xl w-full max-w-md shadow-2xl p-8 relative animate-in zoom-in-95 duration-200">
                                  <h2 className="text-3xl font-bold text-slate-800 mb-6">Update Status</h2>
-                                 
+
                                  <div className="space-y-4 mb-8">
                                      <label className="text-slate-500 font-bold text-lg">Select New Status</label>
-                                     <select 
+                                     <select
                                        name="status_id"
                                        value={formData.status_id}
                                        onChange={handleChange}
@@ -410,10 +410,10 @@ const UpdateProject = () => {
                                          ))}
                                      </select>
                                  </div>
-                   
+
                                  <div className="flex gap-4">
-                                   <button 
-                                       onClick={() => setIsMilestoneModalOpen(false)} 
+                                   <button
+                                       onClick={() => setIsMilestoneModalOpen(false)}
                                        className="flex-1 h-12 rounded-xl border-2 border-slate-300 text-slate-500 font-bold text-xl hover:bg-slate-50 transition-colors"
                                    >
                                        Done

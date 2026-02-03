@@ -100,14 +100,14 @@ const NewProject = () => {
     try {
         setIsUploading(true);
         setUploadStatus('Uploading...');
-        
+
         const response = await fetch('http://localhost:5000/api/projects/import', {
             method: 'POST',
             body: formData,
         });
-        
+
         const data = await response.json();
-        
+
         if (response.ok) {
             setUploadStatus(`Success! ${data.message}`);
         } else {
@@ -123,13 +123,13 @@ const NewProject = () => {
   return (
     <div className="min-h-screen bg-slate-50 font-['Carlito']">
       <Sidebar />
-      
+
       <div className="ml-64 flex flex-col min-h-screen">
         <Header />
 
         <main className="flex-1 p-8">
           <div className="max-w-7xl mx-auto">
-            
+
             {/* Page Header */}
             <div className="flex items-center gap-4 mb-8">
               <button onClick={() => navigate(-1)} className="p-2 hover:bg-slate-200 rounded-full transition-colors group">
@@ -150,13 +150,13 @@ const NewProject = () => {
               }`}></div>
 
               <div className="border-b-2 border-slate-200/50 flex gap-6 relative z-10">
-                <button 
+                <button
                   onClick={() => setActiveTab('csv')}
                   className={`pb-2 text-base font-bold transition-colors relative ${activeTab === 'csv' ? 'text-red-600 border-b-2 border-red-600 -mb-[2px]' : 'text-slate-500 hover:text-slate-700'}`}
                 >
                   Upload CSV
                 </button>
-                <button 
+                <button
                   onClick={() => setActiveTab('manual')}
                   className={`pb-2 text-base font-bold transition-colors relative ${activeTab === 'manual' ? 'text-red-600 border-b-2 border-red-600 -mb-[2px]' : 'text-slate-500 hover:text-slate-700'}`}
                 >
@@ -169,13 +169,13 @@ const NewProject = () => {
             {activeTab === 'manual' ? (
               <form className="space-y-8" onSubmit={handleManualSubmit}>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-8">
-                  
+
                   {/* Left Column */}
                   <div className="space-y-6">
                     {/* Layanan Dropdown */}
                     <div className="flex flex-col gap-2">
                       <label className="text-slate-800 text-lg font-bold">Jenis Layanan</label>
-                      <select 
+                      <select
                         name="layanan_id"
                         value={formData.layanan_id}
                         onChange={handleManualInput}
@@ -188,39 +188,39 @@ const NewProject = () => {
                       </select>
                     </div>
 
-                    <Input 
-                        label="Paket/Kecepatan" 
-                        placeholder="Enter package/speed" 
+                    <Input
+                        label="Paket/Kecepatan"
+                        placeholder="Enter package/speed"
                         value={formData.paket_kecepatan}
                         onChange={(e) => handleManualInput({ target: { name: 'paket_kecepatan', value: e.target.value } })}
                     />
-                    <Input 
-                        label="Order_ID" 
+                    <Input
+                        label="Order_ID"
                         placeholder="Enter Order ID"
                         value={formData.order_id}
                         onChange={(e) => handleManualInput({ target: { name: 'order_id', value: e.target.value } })}
                     />
-                    <Input 
-                        label="Input Date" 
+                    <Input
+                        label="Input Date"
                         type="date"
                         value={formData.input_date}
                         onChange={(e) => handleManualInput({ target: { name: 'input_date', value: e.target.value } })}
                     />
-                    <Input 
-                        label="Lokasi" 
-                        placeholder="Enter location name" 
+                    <Input
+                        label="Lokasi"
+                        placeholder="Enter location name"
                         value={formData.lokasi}
                         onChange={(e) => handleManualInput({ target: { name: 'lokasi', value: e.target.value } })}
                     />
-                    <Input 
-                        label="Alamat" 
-                        placeholder="Enter full address" 
+                    <Input
+                        label="Alamat"
+                        placeholder="Enter full address"
                         value={formData.alamat}
                         onChange={(e) => handleManualInput({ target: { name: 'alamat', value: e.target.value } })}
                     />
-                    <Input 
-                        label="CP Pelanggan" 
-                        placeholder="Enter customer contact" 
+                    <Input
+                        label="CP Pelanggan"
+                        placeholder="Enter customer contact"
                         value={formData.cp_pelanggan}
                         onChange={(e) => handleManualInput({ target: { name: 'cp_pelanggan', value: e.target.value } })}
                     />
@@ -231,7 +231,7 @@ const NewProject = () => {
                     {/* Status Dropdown */}
                     <div className="flex flex-col gap-2">
                       <label className="text-slate-800 text-lg font-bold">Status Order</label>
-                      <select 
+                      <select
                         name="status_id"
                         value={formData.status_id}
                         onChange={handleManualInput}
@@ -244,23 +244,23 @@ const NewProject = () => {
                       </select>
                     </div>
 
-                    <Input 
-                        label="Target RFS" 
-                        type="date" 
+                    <Input
+                        label="Target RFS"
+                        type="date"
                         value={formData.target_rfs}
                         onChange={(e) => handleManualInput({ target: { name: 'target_rfs', value: e.target.value } })}
                     />
-                    
+
                     {/* Map Section */}
                     <div className="flex flex-col gap-2">
                        <div className="flex items-center justify-between">
                           <label className="text-slate-800 text-lg font-bold">Koordinat Map</label>
-                          <button 
+                          <button
                             type="button"
                             onClick={() => setIsLocationLocked(!isLocationLocked)}
                             className={`flex items-center gap-2 px-3 py-1 rounded-lg text-sm font-bold transition-colors ${
-                              isLocationLocked 
-                                ? 'bg-amber-100 text-amber-700 hover:bg-amber-200' 
+                              isLocationLocked
+                                ? 'bg-amber-100 text-amber-700 hover:bg-amber-200'
                                 : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                             }`}
                           >
@@ -274,10 +274,10 @@ const NewProject = () => {
                             {isLocationLocked ? 'Unlock Location' : 'Lock Location'}
                           </button>
                        </div>
-                       <LocationPicker 
-                          lat={lat} 
-                          lng={lng} 
-                          onLocationChange={handleLocationChange} 
+                       <LocationPicker
+                          lat={lat}
+                          lng={lng}
+                          onLocationChange={handleLocationChange}
                           locked={isLocationLocked}
                        />
                     </div>
@@ -286,9 +286,9 @@ const NewProject = () => {
                     <div className="grid grid-cols-2 gap-4">
                       <div className="flex flex-col gap-2 relative">
                         <label className="text-slate-800 text-lg font-bold">Longitude</label>
-                        <input 
-                          type="text" 
-                          placeholder="Longitude" 
+                        <input
+                          type="text"
+                          placeholder="Longitude"
                           value={lng}
                           onChange={(e) => setLng(e.target.value)}
                           disabled={isLocationLocked}
@@ -299,9 +299,9 @@ const NewProject = () => {
                       </div>
                       <div className="flex flex-col gap-2 relative">
                         <label className="text-slate-800 text-lg font-bold">Latitude</label>
-                        <input 
-                          type="text" 
-                          placeholder="Latitude" 
+                        <input
+                          type="text"
+                          placeholder="Latitude"
                           value={lat}
                           onChange={(e) => setLat(e.target.value)}
                           disabled={isLocationLocked}
@@ -317,7 +317,7 @@ const NewProject = () => {
                 {/* Full Width Description */}
                 <div className="flex flex-col gap-2">
                   <label className="text-slate-800 text-lg font-bold">Keterangan</label>
-                  <textarea 
+                  <textarea
                     name="description"
                     value={formData.description}
                     onChange={handleManualInput}
@@ -328,16 +328,16 @@ const NewProject = () => {
 
                 {/* Action Buttons */}
                 <div className="flex gap-4 pt-4">
-                  <button type="button" className="flex items-center justify-center gap-3 h-14 px-8 rounded-2xl bg-zinc-300 text-white text-xl font-bold hover:bg-zinc-400 transition-colors group">
+                  <button type="button" className="flex items-center justify-center gap-3 h-14 px-8 rounded-xl bg-zinc-300 text-white text-xl font-bold hover:bg-zinc-400 transition-colors group">
                     <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
                     </svg>
                     Save Draft
                   </button>
-                  <button 
-                    type="submit" 
+                  <button
+                    type="submit"
                     disabled={manualLoading}
-                    className={`flex items-center justify-center gap-3 h-14 px-8 rounded-2xl bg-red-600 text-white text-xl font-bold transition-colors shadow-md shadow-red-600/20 group ${manualLoading ? 'opacity-70' : 'hover:bg-red-700'}`}
+                    className={`flex items-center justify-center gap-3 h-14 px-8 rounded-xl bg-red-600 text-white text-xl font-bold transition-colors shadow-md shadow-red-600/20 group ${manualLoading ? 'opacity-70' : 'hover:bg-red-700'}`}
                   >
                     <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
@@ -348,29 +348,29 @@ const NewProject = () => {
               </form>
             ) : (
               // CSV Upload Section
-              <div className="bg-white rounded-2xl p-12 text-center border-2 border-dashed border-slate-300">
+              <div className="bg-white rounded-xl p-12 text-center border-2 border-dashed border-slate-300">
                  <div className="flex flex-col items-center gap-4">
                     <div className="w-20 h-20 rounded-full bg-slate-50 flex items-center justify-center mb-2">
                         <svg className="w-10 h-10 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                         </svg>
                     </div>
-                    
+
                     <h3 className="text-xl font-bold text-slate-700">Upload CSV/Excel File</h3>
                     <p className="text-slate-500 mb-4 max-w-md">
-                        Drag and drop your file here or click to browse. 
+                        Drag and drop your file here or click to browse.
                         Supported formats: .xlsx, .csv
                     </p>
 
-                    <input 
-                        type="file" 
+                    <input
+                        type="file"
                         accept=".csv, .xlsx, .xls"
                         onChange={handleFileChange}
                         className="hidden"
                         id="file-upload"
                     />
-                    
-                    <label 
+
+                    <label
                         htmlFor="file-upload"
                         className="px-6 py-3 bg-slate-800 text-white rounded-xl font-bold hover:bg-slate-900 transition-colors cursor-pointer flex items-center gap-2"
                     >
@@ -391,8 +391,8 @@ const NewProject = () => {
                                     <p className="text-xs text-slate-400">{(file.size / 1024).toFixed(1)} KB</p>
                                 </div>
                             </div>
-                            <button 
-                                onClick={handleUpload} 
+                            <button
+                                onClick={handleUpload}
                                 disabled={isUploading}
                                 className={`px-4 py-2 bg-red-600 text-white text-sm font-bold rounded-lg transition-colors ${
                                     isUploading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-700'
@@ -405,14 +405,14 @@ const NewProject = () => {
 
                     {uploadStatus && (
                         <div className={`mt-4 text-sm font-bold p-3 rounded-lg w-full max-w-md ${
-                            uploadStatus.startsWith('Success') ? 'bg-green-100 text-green-700' : 
+                            uploadStatus.startsWith('Success') ? 'bg-green-100 text-green-700' :
                             uploadStatus.startsWith('Error') || uploadStatus.startsWith('Upload failed') ? 'bg-red-100 text-red-700' : 'bg-blue-50 text-blue-600'
                         }`}>
                             {uploadStatus}
-                            
+
                             {uploadStatus.startsWith('Success') && (
                                 <div className="mt-3 text-center">
-                                    <button 
+                                    <button
                                         onClick={() => navigate('/projects')}
                                         className="text-green-800 underline hover:text-green-900 font-bold"
                                     >

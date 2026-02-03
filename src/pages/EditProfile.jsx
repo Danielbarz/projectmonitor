@@ -8,7 +8,7 @@ import { useAuth } from '../context/AuthContext';
 const EditProfile = () => {
   const navigate = useNavigate();
   const { user, login, token } = useAuth();
-  
+
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -35,7 +35,7 @@ const EditProfile = () => {
 
   const handleSave = async (e) => {
     e.preventDefault();
-    
+
     if (formData.password && formData.password !== formData.confirmPassword) {
         alert("Passwords do not match!");
         return;
@@ -74,13 +74,13 @@ const EditProfile = () => {
   return (
     <div className="min-h-screen bg-slate-50 font-['Carlito']">
       <Sidebar />
-      
+
       <div className="ml-64 flex flex-col min-h-screen">
         <Header />
 
         <main className="flex-1 p-8">
           <div className="max-w-3xl mx-auto">
-            
+
             {/* Page Header */}
             <div className="flex items-center gap-4 mb-8">
               <button onClick={() => navigate(-1)} className="p-2 hover:bg-slate-200 rounded-full transition-colors group">
@@ -92,9 +92,9 @@ const EditProfile = () => {
             </div>
 
             {/* Form Content */}
-            <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-100">
+            <div className="bg-white rounded-xl p-8 shadow-sm border border-slate-100">
               <form className="space-y-8" onSubmit={handleSave}>
-                
+
                 <div className="flex flex-col items-center mb-8">
                     <div className="w-24 h-24 rounded-full bg-slate-800 flex items-center justify-center mb-4 text-white text-3xl font-bold uppercase shadow-lg">
                         {formData.username ? formData.username.substring(0, 2) : 'US'}
@@ -104,36 +104,36 @@ const EditProfile = () => {
                 </div>
 
                 <div className="space-y-6">
-                    <Input 
-                        label="Username" 
+                    <Input
+                        label="Username"
                         name="username"
-                        placeholder="Your Name" 
+                        placeholder="Your Name"
                         value={formData.username}
                         onChange={handleInputChange}
                     />
-                    <Input 
-                        label="Email Address" 
+                    <Input
+                        label="Email Address"
                         name="email"
-                        type="email" 
-                        placeholder="email@example.com" 
+                        type="email"
+                        placeholder="email@example.com"
                         value={formData.email}
                         onChange={handleInputChange}
                     />
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <Input 
-                            label="New Password" 
+                        <Input
+                            label="New Password"
                             name="password"
-                            type="password" 
-                            placeholder="••••••••" 
+                            type="password"
+                            placeholder="••••••••"
                             value={formData.password}
                             onChange={handleInputChange}
                             autoComplete="new-password"
                         />
-                        <Input 
-                            label="Confirm Password" 
+                        <Input
+                            label="Confirm Password"
                             name="confirmPassword"
-                            type="password" 
-                            placeholder="••••••••" 
+                            type="password"
+                            placeholder="••••••••"
                             value={formData.confirmPassword}
                             onChange={handleInputChange}
                             autoComplete="new-password"
@@ -146,8 +146,8 @@ const EditProfile = () => {
                   <button type="button" onClick={() => navigate(-1)} className="h-12 px-6 rounded-xl bg-slate-100 text-slate-600 font-bold hover:bg-slate-200 transition-colors">
                     Cancel
                   </button>
-                  <button 
-                    type="submit" 
+                  <button
+                    type="submit"
                     disabled={loading}
                     className="h-12 px-8 rounded-xl bg-red-600 text-white font-bold hover:bg-red-700 transition-colors shadow-lg shadow-red-600/20 flex items-center gap-2"
                   >
