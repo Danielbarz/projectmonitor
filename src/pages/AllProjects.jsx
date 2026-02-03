@@ -3,6 +3,7 @@ import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
 import { Link, useNavigate } from 'react-router-dom';
 import DateRangePicker from '../components/DateRangePicker';
+import { useAuth } from '../context/AuthContext';
 
 // Multi-select Dropdown Component
 const MultiSelectFilter = ({ label, options, selectedValues, onChange }) => {
@@ -95,6 +96,7 @@ const MultiSelectFilter = ({ label, options, selectedValues, onChange }) => {
 
 const AllProjects = () => {
   const navigate = useNavigate();
+  const { token } = useAuth();
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
@@ -114,9 +116,12 @@ const AllProjects = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+        if (!token) return;
         try {
             const [projectsRes, masterRes] = await Promise.all([
-                fetch('http://localhost:5000/api/projects'),
+                fetch('http://localhost:5000/api/projects', {
+                    headers: { Authorization: token }
+                }),
                 fetch('http://localhost:5000/api/master')
             ]);
 
@@ -142,7 +147,7 @@ const AllProjects = () => {
     };
 
     fetchData();
-  }, []);
+  }, [token]);
 
   const handleDateChange = (start, end) => {
     setStartDate(start);
@@ -208,7 +213,10 @@ const AllProjects = () => {
   const handleReset = async () => {
     if (window.confirm('ARE YOU SURE? This will DELETE ALL PROJECTS and cannot be undone!')) {
         try {
-            const response = await fetch('http://localhost:5000/api/projects/reset', { method: 'DELETE' });
+            const response = await fetch('http://localhost:5000/api/projects/reset', { 
+                method: 'DELETE',
+                headers: { Authorization: token }
+            });
             if (response.ok) {
                 alert('Database reset successful.');
                 window.location.reload(); 

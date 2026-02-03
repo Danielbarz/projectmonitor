@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const projectController = require('../controllers/projectController');
+const auth = require('../middleware/auth');
 const multer = require('multer');
 
 // Configure Multer (Memory Storage)
@@ -16,6 +17,9 @@ const upload = multer({
     }
   }
 });
+
+// Protect all routes
+router.use(auth);
 
 // Import projects
 router.post('/import', upload.single('file'), projectController.importProjects);

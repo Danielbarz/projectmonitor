@@ -27,15 +27,15 @@ function App() {
           <Route element={<ProtectedRoute allowedRoles={['USER', 'ADMIN', 'SUPERADMIN']} />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/projects" element={<AllProjects />} />
+            <Route path="/projects/new" element={<NewProject />} />
             <Route path="/projects/:id" element={<ProjectDetail />} />
+            <Route path="/projects/:id/edit" element={<UpdateProject />} />
             <Route path="/notifications" element={<Notifications />} />
             <Route path="/profile/edit" element={<EditProfile />} />
           </Route>
 
           {/* Admin Routes (Accessible only by ADMIN, SUPERADMIN) */}
           <Route element={<ProtectedRoute allowedRoles={['ADMIN', 'SUPERADMIN']} />}>
-            <Route path="/projects/new" element={<NewProject />} />
-            <Route path="/projects/:id/edit" element={<UpdateProject />} />
             <Route path="/manage-roles" element={<ManageRoles />} />
           </Route>
 

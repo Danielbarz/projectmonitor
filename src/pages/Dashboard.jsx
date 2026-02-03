@@ -4,8 +4,10 @@ import Header from '../components/Header';
 import GanttChart from '../components/GanttChart';
 import ProjectMap from '../components/ProjectMap';
 import DateRangePicker from '../components/DateRangePicker';
+import { useAuth } from '../context/AuthContext';
 
 const Dashboard = () => {
+  const { token } = useAuth();
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
@@ -14,17 +16,26 @@ const Dashboard = () => {
 
   useEffect(() => {
     // Fetch Projects
-    fetch('http://localhost:5000/api/projects')
-        .then(res => res.json())
+    if (!token) return;
+
+    fetch('http://localhost:5000/api/projects', {
+        headers: { Authorization: token }
+    })
+        .then(res => {
+            if (!res.ok) throw new Error('Failed to fetch');
+            return res.json();
+        })
         .then(data => {
-            setAllProjects(data);
+            if (Array.isArray(data)) {
+                setAllProjects(data);
+            }
             setLoading(false);
         })
         .catch(err => {
             console.error('Error fetching projects:', err);
             setLoading(false);
         });
-  }, []);
+  }, [token]);
 
   const handleDateChange = (start, end) => {
     setStartDate(start);

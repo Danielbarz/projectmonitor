@@ -1,5 +1,34 @@
 const pool = require('../db');
 
+// Helper: Notify Admins
+const notifyAdmins = async (message, projectId) => {
+  try {
+    // Find all admins and superadmins (role_id 1 and 2)
+    const admins = await pool.query('SELECT id FROM users WHERE role_id IN (1, 2)');
+    
+    for (const admin of admins.rows) {
+      await pool.query(
+        'INSERT INTO notifications (user_id, project_id, message) VALUES ($1, $2, $3)',
+        [admin.id, projectId, message]
+      );
+    }
+  } catch (err) {
+    console.error('Notification Error:', err.message);
+  }
+};
+
+// Helper: Notify Specific User (Owner)
+const notifyUser = async (userId, message, projectId) => {
+    try {
+        await pool.query(
+            'INSERT INTO notifications (user_id, project_id, message) VALUES ($1, $2, $3)',
+            [userId, projectId, message]
+        );
+    } catch (err) {
+        console.error('Notification Error:', err.message);
+    }
+};
+
 // Get all projects
 exports.getAllProjects = async (req, res) => {
   try {
@@ -113,11 +142,12 @@ exports.createProject = async (req, res) => {
     const newProject = await pool.query(
       `INSERT INTO projects (
         order_id, layanan_id, paket_kecepatan, lokasi, alamat, 
-        cp_pelanggan, status_id, input_date, target_rfs, actual_rfs, latitude, longitude, description
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *`,
+        cp_pelanggan, status_id, input_date, target_rfs, actual_rfs, latitude, longitude, description, created_by
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *`,
       [
         order_id, layanan_id, paket_kecepatan, lokasi, alamat, 
-        cp_pelanggan, status_id, input_date, target_rfs, actual_rfs, latitude, longitude, description
+        cp_pelanggan, status_id, input_date, target_rfs, actual_rfs, latitude, longitude, description,
+        req.user.id
       ]
     );
 
@@ -134,6 +164,9 @@ exports.createProject = async (req, res) => {
         'INSERT INTO project_status (project_id, status_id) VALUES ($1, $2)',
         [newProject.rows[0].id, status_id || 1]
     );
+
+    // Notify Admins
+    await notifyAdmins(`New Project ${order_id} created.`, newProject.rows[0].id);
 
     res.json(newProject.rows[0]);
   } catch (err) {
@@ -162,11 +195,12 @@ exports.updateProject = async (req, res) => {
     if (latitude === '') latitude = null;
     if (longitude === '') longitude = null;
 
-    // 1. Get Current Data for Status Check
-    const currentProjectRes = await pool.query('SELECT status_id FROM projects WHERE id = $1', [id]);
+    // 1. Get Current Data for Status Check and created_by
+    const currentProjectRes = await pool.query('SELECT status_id, created_by FROM projects WHERE id = $1', [id]);
     if (currentProjectRes.rows.length === 0) return res.status(404).json({ message: 'Project not found' });
     
     const oldStatusId = currentProjectRes.rows[0].status_id;
+    const projectOwnerId = currentProjectRes.rows[0].created_by;
 
     // Logic: If status changed, log it to history
     if (status_id && parseInt(status_id) !== oldStatusId) {
@@ -205,6 +239,28 @@ exports.updateProject = async (req, res) => {
 
     if (updateProject.rows.length === 0) {
       return res.status(404).json({ message: 'Project not found' });
+    }
+
+    // Notify Logic
+    const userRole = req.user.role; // 'USER', 'ADMIN', 'SUPERADMIN'
+    const updaterId = req.user.id;
+    
+    console.log('--- Debug Notification Logic ---');
+    console.log('User Role:', userRole);
+    console.log('Updater ID:', updaterId);
+    console.log('Project Owner ID:', projectOwnerId);
+    console.log('------------------------------');
+
+    // 1. If Updater is USER -> Notify Admins
+    if (userRole === 'USER') {
+        await notifyAdmins(`Project ${order_id} has been updated by User.`, id);
+    }
+
+    // 2. If Updater is ADMIN/SUPERADMIN -> Notify Project Owner (if exists and not self)
+    if (userRole === 'ADMIN' || userRole === 'SUPERADMIN') {
+        if (projectOwnerId && projectOwnerId !== updaterId) {
+            await notifyUser(projectOwnerId, `Project ${order_id} has been updated by Admin.`, id);
+        }
     }
 
     res.json(updateProject.rows[0]);
@@ -324,8 +380,8 @@ exports.importProjects = async (req, res) => {
         const insertedProject = await pool.query(
           `INSERT INTO projects (
             order_id, layanan_id, paket_kecepatan, lokasi, alamat, 
-            cp_pelanggan, status_id, input_date, target_rfs, actual_rfs, latitude, longitude, description
-          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING id`,
+            cp_pelanggan, status_id, input_date, target_rfs, actual_rfs, latitude, longitude, description, created_by
+          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING id`,
           [
             normalizedRow['orderid'] || `AUTO-${Date.now()}-${i}`,
             layanan_id,
@@ -339,7 +395,8 @@ exports.importProjects = async (req, res) => {
             normalizedRow['actualrfs'] || null,
             lat,
             lng,
-            normalizedRow['description'] || normalizedRow['keterangan'] || ''
+            normalizedRow['description'] || normalizedRow['keterangan'] || '',
+            req.user.id
           ]
         );
 

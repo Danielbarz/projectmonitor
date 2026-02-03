@@ -4,9 +4,11 @@ import Header from '../components/Header';
 import Input from '../components/Input';
 import LocationPicker from '../components/LocationPicker';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const NewProject = () => {
   const navigate = useNavigate();
+  const { token } = useAuth();
   const [activeTab, setActiveTab] = useState('manual'); // 'csv' or 'manual'
   const [lat, setLat] = useState('-7.250445');
   const [lng, setLng] = useState('112.768845');
@@ -64,7 +66,10 @@ const NewProject = () => {
 
         const response = await fetch('http://localhost:5000/api/projects', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': token
+            },
             body: JSON.stringify(payload),
         });
 
@@ -103,6 +108,7 @@ const NewProject = () => {
         
         const response = await fetch('http://localhost:5000/api/projects/import', {
             method: 'POST',
+            headers: { 'Authorization': token },
             body: formData,
         });
         

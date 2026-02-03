@@ -48,7 +48,7 @@ const MilestoneTimeline = ({ statusName, statusSequence, hasJT, lastStatusSequen
   const renderPaths = () => {
     if (width === 0) return null;
 
-    const rowHeight = 160; 
+    const rowHeight = 120; 
     const iconSize = 56;   
     const centerX = 28;    
     const leftX = centerX;      
@@ -110,7 +110,7 @@ const MilestoneTimeline = ({ statusName, statusSequence, hasJT, lastStatusSequen
             const isLeft = idx % 2 === 0;
 
             return (
-                <div key={idx} style={{ height: idx === steps.length - 1 ? 'auto' : '160px' }} className={`flex items-start w-full ${isLeft ? 'flex-row' : 'flex-row-reverse text-right'}`}>
+                <div key={idx} style={{ height: idx === steps.length - 1 ? 'auto' : '120px' }} className={`flex items-start w-full ${isLeft ? 'flex-row' : 'flex-row-reverse text-right'}`}>
                     
                     <div className={`w-14 h-14 rounded-full border-2 flex items-center justify-center shrink-0 transition-all duration-500 z-10 ${bubbleClass}`}>
                         {isFinished ? (

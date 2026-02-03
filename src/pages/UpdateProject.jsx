@@ -4,10 +4,12 @@ import Header from '../components/Header';
 import LocationPicker from '../components/LocationPicker'; // Import LocationPicker
 import MilestoneTimeline from '../components/MilestoneTimeline';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const UpdateProject = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { token } = useAuth();
   
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -41,9 +43,12 @@ const UpdateProject = () => {
   // Fetch Project & Master Data
   useEffect(() => {
     const fetchData = async () => {
+      if (!token) return;
       try {
         const [projectRes, masterRes] = await Promise.all([
-          fetch(`http://localhost:5000/api/projects/${id}`),
+          fetch(`http://localhost:5000/api/projects/${id}`, {
+             headers: { Authorization: token }
+          }),
           fetch('http://localhost:5000/api/master')
         ]);
 
@@ -98,7 +103,7 @@ const UpdateProject = () => {
     };
 
     fetchData();
-  }, [id]);
+  }, [id, token]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -133,7 +138,10 @@ const UpdateProject = () => {
 
         const response = await fetch(`http://localhost:5000/api/projects/${id}`, {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': token
+            },
             body: JSON.stringify(payload)
         });
 
@@ -189,19 +197,19 @@ const UpdateProject = () => {
               <div className="flex gap-4">
                 <button 
                     onClick={() => navigate(-1)}
-                    className="flex items-center justify-center gap-3 h-14 px-8 rounded-2xl bg-zinc-300 text-white text-xl font-bold hover:bg-zinc-400 transition-colors group"
+                    className="flex items-center justify-center gap-2 h-11 px-6 rounded-xl bg-zinc-200 text-zinc-600 text-base font-bold hover:bg-zinc-300 transition-colors group"
                 >
                     Cancel
                 </button>
                 <button 
                     onClick={handleSave}
                     disabled={saving}
-                    className="flex items-center gap-3 bg-red-600 text-white px-8 h-14 rounded-2xl hover:bg-red-700 transition-colors shadow-lg shadow-red-600/20 group"
+                    className="flex items-center gap-2 bg-red-600 text-white h-11 px-6 rounded-xl hover:bg-red-700 transition-colors shadow-sm active:scale-95 duration-100 group"
                 >
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
                     </svg>
-                    <span className="font-bold text-xl">{saving ? 'Saving...' : 'Save Update'}</span>
+                    <span className="font-bold text-base">{saving ? 'Saving...' : 'Save Update'}</span>
                 </button>
               </div>
             </div>
@@ -256,7 +264,7 @@ const UpdateProject = () => {
 
                 {/* Activity Log / Notes (Updated) */}
                 <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-100 relative pb-20">
-                   <h3 className="text-slate-400 font-bold text-lg uppercase tracking-wide mb-8">Activity Log / Notes</h3>
+                   <h3 className="text-slate-400 font-bold text-sm uppercase tracking-wide mb-6">Activity Log / Notes</h3>
                    <div className="relative">
                       <div className="absolute left-[7px] top-2 bottom-2 w-0.5 bg-slate-200"></div>
                       <div className="space-y-8">
@@ -337,7 +345,7 @@ const UpdateProject = () => {
 
                 {/* Project Milestone (Preview) */}
                 <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 relative flex-1">
-                   <h3 className="text-slate-400 font-bold text-sm uppercase tracking-wide mb-8">Project Milestone</h3>
+                   <h3 className="text-slate-400 font-bold text-sm uppercase tracking-wide mb-4">Project Milestone</h3>
                    
                    {(() => {
                        const currentStatusObj = masterData.status.find(s => s.id === parseInt(formData.status_id));

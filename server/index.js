@@ -16,6 +16,7 @@ app.use('/api/projects', require('./routes/projects'));
 app.use('/api/dashboard', require('./routes/dashboard'));
 app.use('/api/users', require('./routes/users'));
 app.use('/api/master', require('./routes/master'));
+app.use('/api/notifications', require('./routes/notifications'));
 
 app.get('/', (req, res) => {
   res.json({ message: 'Welcome to the Project Monitor API' });

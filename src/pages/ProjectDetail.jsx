@@ -4,17 +4,22 @@ import Header from '../components/Header';
 import ProjectMap from '../components/ProjectMap';
 import MilestoneTimeline from '../components/MilestoneTimeline';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const ProjectDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { token } = useAuth();
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchProject = async () => {
+      if (!token) return;
       try {
-        const response = await fetch(`http://localhost:5000/api/projects/${id}`);
+        const response = await fetch(`http://localhost:5000/api/projects/${id}`, {
+          headers: { Authorization: token }
+        });
         if (!response.ok) throw new Error('Project not found');
         const data = await response.json();
         setProject(data);
@@ -26,7 +31,7 @@ const ProjectDetail = () => {
     };
 
     fetchProject();
-  }, [id]);
+  }, [id, token]);
 
   const formatDate = (dateString) => {
     if (!dateString) return '-';
@@ -148,7 +153,7 @@ const ProjectDetail = () => {
 
                 {/* Activity Log / Notes (Full History) */}
                 <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-100 relative">
-                   <h3 className="text-slate-400 font-bold text-lg uppercase tracking-wide mb-8">Activity Log / Notes</h3>
+                   <h3 className="text-slate-400 font-bold text-sm uppercase tracking-wide mb-6">Activity Log / Notes</h3>
                    <div className="relative">
                       {/* Vertical Line */}
                       <div className="absolute left-[7px] top-2 bottom-2 w-0.5 bg-slate-200"></div>
@@ -230,7 +235,7 @@ const ProjectDetail = () => {
 
                 {/* Project Milestone (Dynamic Component) */}
                 <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 relative flex-1">
-                   <h3 className="text-slate-400 font-bold text-sm uppercase tracking-wide mb-8">Project Milestone</h3>
+                   <h3 className="text-slate-400 font-bold text-sm uppercase tracking-wide mb-4">Project Milestone</h3>
                    <MilestoneTimeline 
                       statusName={project.status_name}
                       statusSequence={project.status_sequence}
